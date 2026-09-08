@@ -25,29 +25,32 @@ export const Popups: React.FC = () => {
     <>
       {/* 1. Self Killed Modal (Target player device only) */}
       {selfKilledNotice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75">
-          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white border-2 border-black rounded-none p-5 sm:p-6 shadow-none text-center">
-            <div className="w-14 h-14 rounded-none bg-[#800000] border-2 border-black flex items-center justify-center text-white mx-auto mb-3">
-              <Skull className="w-8 h-8" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 font-mono">
+          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-[#101216] border border-[#ff003c] hud-cut shadow-[0_0_35px_rgba(255,0,60,0.25)] p-6 text-center animate-hud-modal-snap">
+            {/* Top Hazard Stripe */}
+            <div className="h-1.5 w-full bg-[#ff003c] hud-hazard-red mb-4" />
+
+            <div className="w-14 h-14 bg-[#ff003c]/15 border border-[#ff003c] flex items-center justify-center text-[#ff003c] mx-auto mb-3">
+              <Skull className="w-7 h-7 text-[#ff003c]" />
             </div>
 
-            <h3 className="font-mono font-black text-xl text-[#800000] tracking-wider mb-2 uppercase">
-              YOU HAVE BEEN KILLED
+            <h3 className="font-bold text-lg text-[#ff003c] tracking-wider mb-2 uppercase">
+              [ YOU HAVE BEEN KILLED ]
             </h3>
 
-            <p className="text-xs text-stone-700 mb-3 leading-relaxed font-mono">
+            <p className="text-xs text-stone-300 mb-4 leading-relaxed uppercase">
               {selfKilledNotice}
             </p>
 
-            <div className="p-2.5 rounded-none bg-[#fff3cd] border-2 border-black text-[11px] text-[#856404] mb-5 font-mono font-bold">
-              ⚠️ Respect the Omertà code of silence: do not reveal private info to living players.
+            <div className="p-3 bg-[#ff003c]/10 border border-[#ff003c]/40 text-[10px] text-[#ff003c] mb-5 leading-relaxed font-bold uppercase">
+              You have been eliminated. Please do not speak or reveal game details to living players.
             </div>
 
             <button
               onClick={dismissSelfKilledNotice}
-              className="retro-btn-secondary w-full py-2.5 px-4 text-xs font-mono font-bold uppercase tracking-wider"
+              className="hud-btn hud-btn-secondary w-full py-2.5 text-xs"
             >
-              I Understand (Spectate)
+              [ ENTER SPECTATOR MODE ]
             </button>
           </div>
         </div>
@@ -55,49 +58,52 @@ export const Popups: React.FC = () => {
 
       {/* 2. Role Revealed Modal (Broadcast to all players upon death) */}
       {roleRevealedNotice && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/75">
-          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white border-2 border-black rounded-none p-5 sm:p-6 shadow-none text-center">
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/85 font-mono">
+          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-[#101216] border border-[#fcee0a] hud-cut shadow-[0_0_35px_rgba(0,0,0,0.95)] p-6 text-center animate-hud-modal-snap">
+            {/* Top Hazard Stripe */}
+            <div className="h-1.5 w-full bg-[#fcee0a] hud-hazard-yellow mb-4" />
+
             <button
               onClick={dismissRoleRevealedNotice}
-              className="absolute top-3 right-3 p-1 rounded-none text-black hover:bg-[#800000] hover:text-white border border-black"
+              className="absolute top-3 right-3 p-1.5 text-[#7d8799] hover:text-[#fcee0a]"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="w-12 h-12 rounded-none bg-[#efefef] border-2 border-black flex items-center justify-center text-black mx-auto mb-2">
-              <Eye className="w-6 h-6 text-[#800000]" />
+            <div className="w-12 h-12 bg-[#08090b] border border-[#fcee0a]/40 flex items-center justify-center text-[#fcee0a] mx-auto mb-3">
+              <Eye className="w-6 h-6" />
             </div>
 
-            <div className="text-[10px] uppercase font-mono tracking-widest text-stone-600 mb-1 font-bold">
-              Casualty Report
+            <div className="text-[10px] uppercase tracking-widest text-[#7d8799] mb-1 font-bold">
+              PLAYER ELIMINATED
             </div>
 
-            <h3 className="font-mono font-black text-lg text-black mb-3 uppercase">
-              {roleRevealedNotice.playerName} Has Fallen
+            <h3 className="font-bold text-base text-white mb-4 uppercase tracking-wider">
+              {roleRevealedNotice.playerName} HAS BEEN KILLED
             </h3>
 
-            <div className="py-2 px-4 rounded-none bg-[#f4f4f4] border-2 border-black inline-block mb-4">
-              <div className="text-[10px] uppercase font-mono text-stone-600 font-bold">Revealed Secret Role</div>
+            <div className="py-2.5 px-5 bg-[#08090b] border border-[#fcee0a]/30 inline-block mb-5">
+              <div className="text-[10px] uppercase text-[#7d8799] font-bold tracking-wider">REVEALED ROLE:</div>
               <div
-                className={`font-mono text-base font-black uppercase tracking-wider ${
+                className={`text-base font-bold tracking-widest uppercase mt-0.5 ${
                   roleRevealedNotice.role === 'Mafia'
-                    ? 'text-[#800000]'
+                    ? 'text-[#ff003c]'
                     : roleRevealedNotice.role === 'Detective'
-                    ? 'text-[#003399]'
+                    ? 'text-[#00e5ff]'
                     : roleRevealedNotice.role === 'Doctor'
-                    ? 'text-[#1e824c]'
-                    : 'text-black'
+                    ? 'text-[#00ff9f]'
+                    : 'text-[#fcee0a]'
                 }`}
               >
-                {roleRevealedNotice.role || 'Villager'}
+                [ {roleRevealedNotice.role?.toUpperCase() || 'VILLAGER'} ]
               </div>
             </div>
 
             <button
               onClick={dismissRoleRevealedNotice}
-              className="retro-btn-primary w-full py-2.5 px-4 text-xs font-mono font-bold tracking-wider uppercase"
+              className="hud-btn hud-btn-primary w-full py-2.5 text-xs"
             >
-              Continue
+              [ CONTINUE ]
             </button>
           </div>
         </div>
@@ -105,54 +111,65 @@ export const Popups: React.FC = () => {
 
       {/* 3. Game Over Modal (Broadcast to all when win condition met) */}
       {gameOverNotice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75">
-          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-none p-5 sm:p-6 shadow-none text-center border-2 border-black bg-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 font-mono">
+          <div
+            className={`relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-[#101216] border-2 hud-cut shadow-[0_0_40px_rgba(0,0,0,0.95)] p-6 text-center animate-hud-modal-snap ${
+              gameOverNotice.winner === 'Town' ? 'border-[#00ff9f]' : 'border-[#ff003c]'
+            }`}
+          >
+            {/* Top Hazard Stripe */}
             <div
-              className={`w-14 h-14 rounded-none border-2 border-black flex items-center justify-center mx-auto mb-3 ${
+              className={`h-1.5 w-full mb-4 ${
+                gameOverNotice.winner === 'Town' ? 'bg-[#00ff9f]' : 'bg-[#ff003c] hud-hazard-red'
+              }`}
+            />
+
+            <div
+              className={`w-14 h-14 border flex items-center justify-center mx-auto mb-3 ${
                 gameOverNotice.winner === 'Town'
-                  ? 'bg-[#eafaf1] text-[#1e824c]'
-                  : 'bg-[#fbebee] text-[#800000]'
+                  ? 'bg-[#00ff9f]/15 border-[#00ff9f] text-[#00ff9f]'
+                  : 'bg-[#ff003c]/15 border-[#ff003c] text-[#ff003c]'
               }`}
             >
-              <Trophy className="w-8 h-8" />
+              <Trophy className="w-7 h-7" />
             </div>
 
-            <div className="text-[10px] uppercase font-mono tracking-widest text-stone-600 mb-1 font-bold">
-              Game Over
+            <div className="text-[10px] uppercase tracking-widest text-[#7d8799] mb-1 font-bold">
+              GAME OVER
             </div>
 
             <h3
-              className={`font-mono font-black text-2xl tracking-wider mb-2 uppercase ${
-                gameOverNotice.winner === 'Town' ? 'text-[#1e824c]' : 'text-[#800000]'
+              className={`font-bold text-2xl tracking-wider mb-2 uppercase ${
+                gameOverNotice.winner === 'Town' ? 'text-[#00ff9f]' : 'text-[#ff003c]'
               }`}
             >
-              {gameOverNotice.winner.toUpperCase()} WINS
+              [ {gameOverNotice.winner.toUpperCase()} WINS ]
             </h3>
 
-            <p className="text-xs text-stone-700 mb-4 leading-relaxed font-mono">
+            <p className="text-xs text-stone-300 mb-5 leading-relaxed uppercase">
               {gameOverNotice.reason}
             </p>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {isModerator ? (
                 <button
                   onClick={handlePlayAgain}
-                  className="retro-btn-primary w-full py-2.5 px-4 text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+                  className="hud-btn hud-btn-primary w-full py-2.5 text-xs flex items-center justify-center gap-2"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  Play Again (Reset Game)
+                  <span>[ PLAY AGAIN (RESET) ]</span>
                 </button>
               ) : (
-                <div className="p-2.5 rounded-none bg-[#f4f4f4] border-2 border-black text-[11px] text-stone-700 font-mono font-bold">
-                  Waiting for moderator to start next game...
+                <div className="p-3 bg-[#08090b] border border-[#fcee0a]/20 text-[10px] text-[#7d8799] uppercase font-bold tracking-wider">
+                  Waiting for moderator to reset game...
                 </div>
               )}
 
               <button
                 onClick={dismissGameOverNotice}
-                className="retro-btn-secondary w-full py-2 px-4 text-[11px] font-mono font-bold uppercase tracking-wider"
+                className="hud-btn hud-btn-secondary w-full py-2 text-xs"
               >
-                Dismiss Notice
+                [ DISMISS ]
               </button>
             </div>
           </div>

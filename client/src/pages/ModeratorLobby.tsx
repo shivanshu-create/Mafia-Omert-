@@ -132,7 +132,7 @@ export const ModeratorLobby: React.FC = () => {
       message: (
         <div>
           <p>Advance the game to Round {nextRound}?</p>
-          <p className="mt-1 text-stone-500">Eliminated casualties will be archived in the round history above.</p>
+          <p className="mt-1 text-stone-400">Eliminated casualties will be archived in the round history above.</p>
         </div>
       ),
       confirmLabel: `Advance Round`,
@@ -205,8 +205,8 @@ export const ModeratorLobby: React.FC = () => {
       title: `Remove ${playerName}?`,
       message: (
         <div>
-          <p>Are you sure you want to remove <strong className="text-black font-black">{playerName}</strong> from the room?</p>
-          <p className="mt-1 text-stone-500">They will be disconnected and removed from the lobby manifest.</p>
+          <p>Are you sure you want to remove <strong className="text-white font-semibold">{playerName}</strong> from the room?</p>
+          <p className="mt-1 text-stone-400">They will be disconnected and removed from the lobby roster.</p>
         </div>
       ),
       confirmLabel: `Remove ${playerName}`,
@@ -230,7 +230,7 @@ export const ModeratorLobby: React.FC = () => {
       message: (
         <div>
           <p>Start a new game with the current players?</p>
-          <p className="mt-1 text-stone-500">Roles and round history will be reset, but all connected players will remain in the room.</p>
+          <p className="mt-1 text-stone-400">Roles and round history will be reset, but all connected players will remain in the room.</p>
         </div>
       ),
       confirmLabel: 'Reset Game',
@@ -254,7 +254,7 @@ export const ModeratorLobby: React.FC = () => {
       message: (
         <div>
           <p>Are you sure you want to exit and close this game lobby?</p>
-          <p className="mt-1 text-stone-500">All connected players will be disconnected and this room session will end.</p>
+          <p className="mt-1 text-stone-400">All connected players will be disconnected and this room session will end.</p>
         </div>
       ),
       confirmLabel: 'Exit Room',
@@ -272,27 +272,27 @@ export const ModeratorLobby: React.FC = () => {
 
   if (isVerifying) {
     return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <Loader2 className="w-8 h-8 text-red-500 animate-spin mx-auto mb-4" />
-        <p className="text-sm font-semibold text-stone-200">Reconnecting to Moderator Dashboard...</p>
+      <div className="max-w-md mx-auto px-4 py-16 text-center font-mono">
+        <Loader2 className="w-8 h-8 text-[#fcee0a] animate-spin mx-auto mb-4" />
+        <p className="text-xs font-bold uppercase tracking-wider text-stone-300">Reconnecting to moderator view...</p>
       </div>
     );
   }
 
   if (errorNotice || (!isModerator && !roomState)) {
     return (
-      <div className="max-w-md mx-auto px-4 py-12">
-        <div className="portal-module text-center p-6 sm:p-8">
-          <div className="w-12 h-12 bg-[#800000] border-2 border-black flex items-center justify-center text-white mx-auto mb-4">
+      <div className="max-w-md mx-auto px-4 py-12 font-mono">
+        <div className="bg-[#101216] hud-cut border border-[#ff003c] p-6 sm:p-8 text-center shadow-[0_0_35px_rgba(255,0,60,0.2)] animate-hud-modal-snap">
+          <div className="w-12 h-12 bg-[#ff003c]/20 border border-[#ff003c] flex items-center justify-center text-[#ff003c] mx-auto mb-4">
             <AlertTriangle className="w-6 h-6" />
           </div>
-          <h3 className="font-mono font-black text-xl text-black uppercase mb-2">Access Denied</h3>
-          <p className="text-xs text-stone-600 mb-6 font-mono">{errorNotice || 'Moderator session not found.'}</p>
+          <h3 className="font-bold text-lg text-[#ff003c] mb-2 uppercase tracking-wider">[ ROOM NOT FOUND ]</h3>
+          <p className="text-xs text-stone-400 mb-6 leading-relaxed font-mono uppercase">{errorNotice || 'Moderator session expired or disconnected.'}</p>
           <button
             onClick={() => navigate('/')}
-            className="retro-btn-primary w-full py-2.5 px-4 text-xs font-mono font-black uppercase tracking-wider"
+            className="hud-btn hud-btn-primary w-full py-2.5 text-xs"
           >
-            Return to Home
+            [ RETURN TO HOME ]
           </button>
         </div>
       </div>
@@ -306,7 +306,7 @@ export const ModeratorLobby: React.FC = () => {
   const isTwoPhoneMode = roomState?.gameMode === 'two_phone';
 
   return (
-    <div className="max-w-4xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-4 font-sans">
+    <div className="max-w-4xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6 space-y-4 font-mono">
       {/* Universal Popups */}
       <Popups />
 
@@ -315,86 +315,86 @@ export const ModeratorLobby: React.FC = () => {
 
       {/* Toast Notification when role is sent to shared phone */}
       {revealSuccessNotice && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 px-3.5 py-2 bg-emerald-100 border-2 border-black text-black text-xs font-bold shadow-[2px_2px_0px_#000000] flex items-center gap-2">
-          <Smartphone className="w-4 h-4 text-emerald-800" />
-          <span>{revealSuccessNotice}</span>
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 bg-[#101216] border border-[#00ff9f] text-[#00ff9f] text-xs font-bold hud-cut shadow-2xl flex items-center gap-2.5 animate-hud-modal-snap uppercase tracking-wider">
+          <Smartphone className="w-4 h-4 text-[#00ff9f]" />
+          <span>// {revealSuccessNotice}</span>
         </div>
       )}
 
       {/* Moderator Header Module */}
-      <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
-        <div className="bg-[#800000] text-white px-3 py-1.5 font-bold text-xs uppercase tracking-wider border-b-2 border-black flex flex-wrap items-center justify-between gap-2">
+      <div className="bg-[#101216] hud-cut border border-[#fcee0a]/30 overflow-hidden">
+        <div className="bg-[#0c0e12] border-b border-[#fcee0a]/20 px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
-            <span className="bg-black text-white px-1.5 py-0.5 text-[10px] font-mono">MOD CONSOLE</span>
+            <span className="bg-[#fcee0a] text-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">[ MODERATOR ]</span>
             {isTwoPhoneMode ? (
-              <span className="bg-amber-300 text-black px-1.5 py-0.5 text-[10px] font-bold flex items-center gap-1">
-                <Smartphone className="w-3 h-3" />
-                <span>TWO-PHONE</span>
+              <span className="bg-[#08090b] text-[#fcee0a] border border-[#fcee0a]/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                <Smartphone className="w-3" />
+                <span>[ TWO-PHONE ]</span>
               </span>
             ) : (
-              <span className="bg-white text-black px-1.5 py-0.5 text-[10px] font-bold">
-                MULTI-PHONE
+              <span className="bg-[#08090b] text-[#7d8799] border border-stone-800 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                [ MULTI-PHONE ]
               </span>
             )}
           </div>
           {isGameStarted && (
-            <span className="bg-black text-amber-300 px-1.5 py-0.5 font-mono text-[10px]">
-              ROUND {currentRound}
+            <span className="bg-[#ff003c]/20 text-[#ff003c] border border-[#ff003c]/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+              [ ROUND {currentRound} ]
             </span>
           )}
         </div>
 
-        <div className="p-4 sm:p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-black">
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#fcee0a]/20">
             <div>
-              <h2 className="font-black text-xl sm:text-2xl text-black tracking-wide uppercase">
-                {isGameStarted ? 'NIGHT & DAY CONTROL STATION' : 'GAME LOBBY & MANIFEST'}
+              <h2 className="font-bold text-xl sm:text-2xl text-white tracking-wider uppercase">
+                {isGameStarted ? 'MODERATOR CONTROL STATION' : 'ROOM LOBBY'}
               </h2>
-              <p className="text-xs text-stone-600 mt-0.5 uppercase tracking-wider">
+              <p className="text-xs text-[#7d8799] mt-1">
                 {isGameStarted
-                  ? 'Manage night-phase actions, status tags, and day accusations'
-                  : 'Assign roles to players, then start Round 1'}
+                  ? 'Manage player statuses, role reveals, and day votes'
+                  : 'Assign roles before starting Round 1'}
               </p>
             </div>
 
             {/* Room Code display */}
             <div className="flex items-center gap-2 shrink-0">
-              <div className="bg-[#f0ede5] border-2 border-black px-3 py-1.5 text-center shadow-[1px_1px_0px_#000000]">
-                <div className="text-[9px] uppercase font-bold text-black">ROOM CODE</div>
-                <div className="font-mono text-xl sm:text-2xl font-black text-[#800000] tracking-widest">
+              <div className="bg-[#08090b] border border-[#fcee0a]/40 px-4 py-2 text-center">
+                <div className="text-[10px] uppercase font-bold text-[#7d8799] tracking-wider">ROOM CODE</div>
+                <div className="font-mono text-xl sm:text-2xl font-bold text-[#fcee0a] tracking-widest">
                   {formattedCode}
                 </div>
               </div>
 
               <button
                 onClick={() => setShowQR(true)}
-                className="p-2.5 bg-[#f0ede5] hover:bg-white text-black border-2 border-black shadow-[1px_1px_0px_#000000] active:translate-y-px transition-colors"
+                className="p-3 bg-[#08090b] hover:bg-[#141720] text-[#fcee0a] border border-[#fcee0a]/40 transition-none"
                 title="Show QR Code"
               >
-                <QrCode className="w-5 h-5 text-[#800000]" />
+                <QrCode className="w-5 h-5 text-[#fcee0a]" />
               </button>
             </div>
           </div>
 
           {/* Share Link Actions */}
-          <div className="mt-3 flex flex-col sm:flex-row items-center gap-2">
-            <div className="w-full flex-1 px-3 py-1.5 bg-stone-50 border-2 border-black text-xs font-mono text-black truncate select-all">
+          <div className="mt-4 flex flex-col sm:flex-row items-center gap-2.5">
+            <div className="w-full flex-1 px-3.5 py-2 bg-[#08090b] border border-[#fcee0a]/30 text-xs font-mono text-[#fcee0a] truncate select-all">
               {joinUrl}
             </div>
 
             <button
               onClick={handleCopyLink}
-              className="retro-btn retro-btn-secondary w-full sm:w-auto shadow-[1px_1px_0px_#000000] whitespace-nowrap"
+              className="hud-btn hud-btn-primary w-full sm:w-auto px-4 py-2 text-xs flex items-center justify-center gap-2 whitespace-nowrap"
             >
               {copiedLink ? (
                 <>
-                  <Check className="w-4 h-4 text-emerald-700" />
-                  <span className="text-emerald-800 font-bold">Link Copied!</span>
+                  <Check className="w-4 h-4 text-black" />
+                  <span>[ LINK COPIED ]</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 text-black" />
-                  <span>Copy Join Link</span>
+                  <span>[ COPY JOIN LINK ]</span>
                 </>
               )}
             </button>
@@ -403,105 +403,105 @@ export const ModeratorLobby: React.FC = () => {
       </div>
 
       {/* Moderator Quick Reference (Collapsible Accordion) */}
-      <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000] overflow-hidden">
+      <div className="bg-[#101216] hud-cut-sm border border-[#fcee0a]/20 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowQuickRef(!showQuickRef)}
-          className="w-full p-2.5 flex items-center justify-between gap-2 text-left bg-[#f0ede5] hover:bg-white transition-colors border-b-2 border-black"
+          className="w-full p-3.5 sm:p-4 flex items-center justify-between gap-3 text-left bg-[#0c0e12] hover:bg-[#141720] transition-none"
         >
-          <div className="flex items-center gap-2">
-            <div className="p-1 bg-white border border-black text-[#800000] shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 bg-[#08090b] border border-[#fcee0a]/40 text-[#fcee0a] shrink-0">
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <h4 className="text-xs font-bold text-black uppercase tracking-wider">
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">
                   MODERATOR QUICK REFERENCE
                 </h4>
-                <span className="text-[10px] font-mono text-stone-600 uppercase">
-                  [STATUSES & LOOP]
+                <span className="text-[10px] text-[#7d8799] uppercase font-bold">
+                  [RULES & ACTIONS]
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-[11px] font-bold text-black uppercase hidden sm:inline">
-              {showQuickRef ? '[-] HIDE' : '[+] EXPAND'}
+          <div className="flex items-center gap-1.5 shrink-0 text-[#7d8799]">
+            <span className="text-xs font-bold uppercase hidden sm:inline">
+              {showQuickRef ? '[ COLLAPSE ]' : '[ EXPAND ]'}
             </span>
             {showQuickRef ? (
-              <ChevronUp className="w-4 h-4 text-black" />
+              <ChevronUp className="w-4 h-4" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-black" />
+              <ChevronDown className="w-4 h-4" />
             )}
           </div>
         </button>
 
         {showQuickRef && (
-          <div className="p-3.5 space-y-3 text-xs bg-white text-black">
+          <div className="p-4 sm:p-5 space-y-4 text-xs bg-[#101216] text-stone-300 border-t border-[#fcee0a]/20 font-mono">
             {/* Status Toggles Breakdown */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-wider font-bold text-[#800000] mb-1.5">
-                PLAYER STATUS VALUES (TAP CARD IN ROSTER TO TOGGLE):
+              <p className="text-[10px] uppercase tracking-wider font-bold text-[#7d8799] mb-2">
+                PLAYER STATUSES (TAP CARD IN ROSTER TO CHANGE):
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div className="p-2 border border-black bg-emerald-50 flex items-start gap-2">
-                  <span className="w-3 h-3 bg-emerald-600 border border-black mt-0.5 shrink-0" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="p-2.5 bg-[#00ff9f]/10 border border-[#00ff9f]/30 flex items-start gap-2.5">
+                  <span className="w-2 h-2 bg-[#00ff9f] mt-1 shrink-0" />
                   <div>
-                    <strong className="text-black uppercase">Alive:</strong> Default in-game citizen.
+                    <strong className="text-[#00ff9f] uppercase">[ ALIVE ]:</strong> Default active state for living players.
                   </div>
                 </div>
-                <div className="p-2 border border-black bg-[#d8d8d8] flex items-start gap-2">
-                  <Skull className="w-3.5 h-3.5 text-stone-800 mt-0.5 shrink-0" />
+                <div className="p-2.5 bg-[#ff003c]/10 border border-[#ff003c]/30 flex items-start gap-2.5">
+                  <Skull className="w-3.5 h-3.5 text-[#ff003c] mt-0.5 shrink-0" />
                   <div>
-                    <strong className="text-black uppercase">Killed:</strong> Eliminated casualty; silent.
+                    <strong className="text-[#ff003c] uppercase">[ KILLED ]:</strong> Eliminated player; role is revealed.
                   </div>
                 </div>
-                <div className="p-2 border border-black bg-green-100 flex items-start gap-2">
-                  <Heart className="w-3.5 h-3.5 text-green-700 mt-0.5 shrink-0" />
+                <div className="p-2.5 bg-[#00ff9f]/10 border border-[#00ff9f]/30 flex items-start gap-2.5">
+                  <Heart className="w-3.5 h-3.5 text-[#00ff9f] mt-0.5 shrink-0" />
                   <div>
-                    <strong className="text-black uppercase">Saved:</strong> Protected by Doctor this round.
+                    <strong className="text-[#00ff9f] uppercase">[ SAVED ]:</strong> Protected by Doctor for this round.
                   </div>
                 </div>
-                <div className="p-2 border border-black bg-indigo-50 flex items-start gap-2">
-                  <Search className="w-3.5 h-3.5 text-indigo-700 mt-0.5 shrink-0" />
+                <div className="p-2.5 bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-start gap-2.5">
+                  <Search className="w-3.5 h-3.5 text-[#00e5ff] mt-0.5 shrink-0" />
                   <div>
-                    <strong className="text-black uppercase">Detected:</strong> Investigated Mafia (mod only).
+                    <strong className="text-[#00e5ff] uppercase">[ DETECTED ]:</strong> Found by Detective (visible to moderator only).
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Game Flow & Loop */}
-            <div className="p-2.5 bg-stone-50 border border-black space-y-1.5">
-              <p className="font-mono text-[11px] uppercase tracking-wider font-bold text-black">
-                CORE GAME FLOW:
+            <div className="p-3.5 bg-[#08090b] border border-[#fcee0a]/20 space-y-2">
+              <p className="text-[10px] uppercase tracking-wider font-bold text-[#fcee0a]">
+                ROUND SEQUENCE:
               </p>
-              <ul className="space-y-1 text-black list-disc list-inside text-[11px]">
+              <ul className="space-y-1.5 text-stone-300 list-disc list-inside text-xs leading-relaxed">
                 <li>
-                  <strong className="uppercase">Night Phase:</strong> Call roles, apply Saved/Killed/Detected.
+                  <strong className="text-white uppercase">Night Phase:</strong> Call roles, set Saved / Killed / Detected.
                 </li>
                 <li>
-                  <strong className="uppercase">Start Day Vote:</strong> Pushes live accusation ballots to alive players. Ties re-vote.
+                  <strong className="text-white uppercase">Start Day Vote:</strong> Begin town elimination vote on all phones.
                 </li>
                 <li>
-                  <strong className="uppercase">Advance Round:</strong> Archives previous casualties and starts next round.
+                  <strong className="text-white uppercase">Advance Round:</strong> Conclude the day and move to the next night phase.
                 </li>
                 <li>
-                  <strong className="uppercase">Play Again:</strong> Resets all roles and rounds without kicking players.
+                  <strong className="text-white uppercase">Play Again:</strong> Resets roles and starts a new game at Round 1.
                 </li>
               </ul>
             </div>
 
             {/* Button to open full modal */}
-            <div className="flex justify-end pt-0.5">
+            <div className="flex justify-end pt-1">
               <button
                 type="button"
                 onClick={() => setShowHelpModal(true)}
-                className="text-[11px] text-[#800000] hover:underline font-bold uppercase inline-flex items-center gap-1"
+                className="text-xs text-[#fcee0a] hover:text-white font-bold uppercase inline-flex items-center gap-1.5 transition-none"
               >
                 <HelpCircle className="w-3.5 h-3.5" />
-                <span>Open Complete Field Manual &raquo;</span>
+                <span>[ OPEN RULES & GUIDE &raquo; ]</span>
               </button>
             </div>
           </div>
@@ -510,17 +510,17 @@ export const ModeratorLobby: React.FC = () => {
 
       {/* Two-Phone Direct Player Addition Bar */}
       {isTwoPhoneMode && (
-        <div className="border-2 border-black bg-white p-3 shadow-[2px_2px_0px_#000000] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-[#f0ede5] border border-black text-[#800000] shrink-0">
+        <div className="bg-[#101216] hud-cut border border-[#fcee0a]/30 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 bg-[#08090b] border border-[#fcee0a]/40 text-[#fcee0a] shrink-0">
               <UserPlus className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-black uppercase tracking-wide">
-                ADD PLAYER TO ROSTER DIRECTLY
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                ADD PLAYER DIRECTLY
               </h4>
-              <p className="text-[10px] text-stone-600">
-                Enter name here or let players enter on the shared pass-around phone.
+              <p className="text-[10px] text-[#7d8799]">
+                Enter player name or have them join from their phone.
               </p>
             </div>
           </div>
@@ -531,15 +531,15 @@ export const ModeratorLobby: React.FC = () => {
               maxLength={20}
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
-              placeholder="Player Name (e.g. Vito)"
-              className="flex-1 sm:w-44 px-2.5 py-1.5 bg-white border-2 border-black text-black font-bold text-xs placeholder:text-stone-400 focus:outline-none focus:bg-yellow-50 uppercase"
+              placeholder="PLAYER NAME"
+              className="flex-1 sm:w-48 px-3.5 py-2 bg-[#08090b] border border-[#fcee0a]/30 text-[#fcee0a] text-xs uppercase placeholder:text-stone-600 focus:outline-none focus:border-[#fcee0a]"
             />
             <button
               type="submit"
               disabled={!newPlayerName.trim() || isAddingPlayer}
-              className="retro-btn retro-btn-primary shadow-[1px_1px_0px_#000000] disabled:opacity-50 whitespace-nowrap"
+              className="hud-btn hud-btn-primary px-4 py-2 text-xs disabled:opacity-40 whitespace-nowrap"
             >
-              {isAddingPlayer ? 'Adding...' : '+ ADD'}
+              {isAddingPlayer ? '[ ADDING... ]' : '[ + ADD PLAYER ]'}
             </button>
           </form>
         </div>
@@ -560,33 +560,33 @@ export const ModeratorLobby: React.FC = () => {
       />
 
       {/* Moderator Action Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 font-mono">
         <button
           onClick={handleLeaveRoom}
-          className="retro-btn retro-btn-secondary w-full sm:w-auto shadow-[1px_1px_0px_#000000]"
+          className="hud-btn hud-btn-danger px-4 py-2.5 text-xs flex items-center justify-center gap-2 w-full sm:w-auto"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Exit / End Room</span>
+          <span>[ EXIT ROOM ]</span>
         </button>
 
         {!isGameStarted ? (
           <button
             onClick={handleStartGame}
             disabled={playerCount === 0}
-            className="retro-btn retro-btn-primary w-full sm:w-auto py-2.5 px-5 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="hud-btn hud-btn-primary w-full sm:w-auto py-2.5 px-6 text-xs disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <Play className="w-4 h-4" />
-            <span>Start Game (Round 1)</span>
+            <span>[ START GAME (ROUND 1) ]</span>
           </button>
         ) : (
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
             {roomState?.winner ? (
               <button
                 onClick={handlePlayAgain}
-                className="retro-btn bg-emerald-200 hover:bg-emerald-300 text-black border-2 border-black py-2.5 px-4 shadow-[1px_1px_0px_#000000]"
+                className="hud-btn hud-btn-primary px-4 py-2.5 text-xs flex items-center gap-2"
               >
                 <RotateCcw className="w-4 h-4" />
-                <span>Play Again (Reset)</span>
+                <span>[ PLAY AGAIN (RESET) ]</span>
               </button>
             ) : null}
 
@@ -594,20 +594,20 @@ export const ModeratorLobby: React.FC = () => {
             <button
               onClick={handleStartVote}
               disabled={activeVote?.isOpen || !!roomState?.winner}
-              className="retro-btn retro-btn-primary py-2.5 px-4 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="hud-btn hud-btn-primary px-4 py-2.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Vote className="w-4 h-4" />
-              <span>{activeVote?.isOpen ? 'Vote In Progress...' : 'Start Day Vote'}</span>
+              <span>{activeVote?.isOpen ? '[ VOTE IN PROGRESS... ]' : '[ START DAY VOTE ]'}</span>
             </button>
 
             {/* Advance to next round button */}
             <button
               onClick={handleAdvanceRound}
               disabled={!!roomState?.winner}
-              className="retro-btn bg-amber-200 hover:bg-amber-300 text-black border-2 border-black py-2.5 px-4 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="hud-btn hud-btn-secondary px-4 py-2.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <FastForward className="w-4 h-4" />
-              <span>Advance Round {currentRound + 1}</span>
+              <span>[ ADVANCE TO ROUND {currentRound + 1} ]</span>
             </button>
           </div>
         )}

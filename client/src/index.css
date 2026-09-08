@@ -1,23 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: 'Cinzel', serif;
-  --font-sans: 'Arial', 'Helvetica', 'Verdana', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-sans: 'Rajdhani', 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Share Tech Mono', 'Courier New', monospace;
 }
 
 @layer base {
   body {
-    background-color: #ffffff;
-    color: #111111;
-    font-family: var(--font-sans);
+    background-color: #08090b;
+    background-image: 
+      linear-gradient(rgba(252, 238, 10, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(252, 238, 10, 0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    color: #e0e2ec;
+    font-family: var(--font-mono);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, .font-noir {
-    font-family: var(--font-sans);
-    font-weight: 900;
-    letter-spacing: 0.04em;
+  h1, h2, h3, h4 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: 0.05em;
   }
 
   .font-code {
@@ -25,104 +29,276 @@
   }
 }
 
-/* Retro early-2000s boxy portal modules & controls */
-.portal-module {
-  background-color: #ffffff;
-  border: 2px solid #000000;
-  box-shadow: 2px 2px 0px #000000;
+/* ==========================================================================
+   Cyberpunk 2077 HUD Design System
+   ========================================================================== */
+
+/* Angular Cut-Corner Cards */
+.hud-cut {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
 
-.portal-header {
-  background-color: #800000;
+.hud-cut-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.hud-cut-corner-br {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+}
+
+.hud-card {
+  background-color: #101216;
+  border: 1px solid rgba(252, 238, 10, 0.25);
+  position: relative;
+}
+
+.hud-card:hover {
+  border-color: rgba(252, 238, 10, 0.45);
+}
+
+.hud-card-elevated {
+  background-color: #161922;
+  border: 1px solid rgba(252, 238, 10, 0.2);
+}
+
+.hud-input {
+  background-color: #0c0e12;
   color: #ffffff;
-  padding: 4px 10px;
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 2px solid #000000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-radius: 0;
+  border: 1px solid rgba(252, 238, 10, 0.3);
+  font-family: var(--font-mono);
+  transition: border-color 0.1s ease;
 }
 
-.retro-btn {
+.hud-input:focus {
+  outline: none;
+  border-color: #fcee0a;
+  box-shadow: 0 0 0 1px #fcee0a;
+}
+
+/* HUD Buttons */
+.hud-btn {
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 11px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border: 2px solid #000000;
-  padding: 6px 12px;
-  transition: background-color 0.1s ease;
+  border-radius: 0;
+  padding: 0.6rem 1.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 0.5rem;
+  user-select: none;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: transform 0.05s ease, background-color 0.1s ease, color 0.1s ease;
+  position: relative;
 }
 
-.retro-btn-primary {
-  background-color: #800000;
+.hud-btn:active {
+  transform: scale(0.98);
+}
+
+.hud-btn-primary {
+  background-color: #fcee0a;
+  color: #000000;
+  border: 1px solid #fcee0a;
+}
+
+.hud-btn-primary:hover {
+  background-color: #ffe600;
+  box-shadow: 0 0 12px rgba(252, 238, 10, 0.5);
+}
+
+.hud-btn-secondary {
+  background-color: #14171f;
+  color: #e0e2ec;
+  border: 1px solid rgba(252, 238, 10, 0.35);
+}
+
+.hud-btn-secondary:hover {
+  background-color: #fcee0a;
+  color: #000000;
+  border-color: #fcee0a;
+}
+
+.hud-btn-danger {
+  background-color: rgba(255, 0, 60, 0.15);
+  color: #ff003c;
+  border: 1px solid rgba(255, 0, 60, 0.5);
+}
+
+.hud-btn-danger:hover {
+  background-color: #ff003c;
+  color: #000000;
+  border-color: #ff003c;
+}
+
+/* Aliases for retro-btn and tg-btn for seamless compatibility */
+.retro-btn, .tg-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 0;
+  padding: 0.55rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  user-select: none;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  transition: transform 0.05s ease, background-color 0.1s ease, color 0.1s ease;
+}
+
+.retro-btn:active, .tg-btn:active {
+  transform: scale(0.98);
+}
+
+.retro-btn-primary, .tg-btn-primary {
+  background-color: #fcee0a;
+  color: #000000;
+  border: 1px solid #fcee0a;
+}
+
+.retro-btn-primary:hover, .tg-btn-primary:hover {
+  background-color: #ffe600;
+  box-shadow: 0 0 12px rgba(252, 238, 10, 0.5);
+}
+
+.retro-btn-secondary, .tg-btn-secondary {
+  background-color: #14171f;
+  color: #e0e2ec;
+  border: 1px solid rgba(252, 238, 10, 0.35);
+}
+
+.retro-btn-secondary:hover, .tg-btn-secondary:hover {
+  background-color: #fcee0a;
+  color: #000000;
+  border-color: #fcee0a;
+}
+
+/* Compatibility card aliases */
+.tg-card, .portal-module, .bg-noir-card {
+  background-color: #101216;
+  border-radius: 0;
+  border: 1px solid rgba(252, 238, 10, 0.25);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.tg-card-elevated, .bg-noir-card-highlight {
+  background-color: #161922;
+  border-radius: 0;
+  border: 1px solid rgba(252, 238, 10, 0.2);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.tg-input {
+  background-color: #0c0e12;
   color: #ffffff;
+  border-radius: 0;
+  border: 1px solid rgba(252, 238, 10, 0.3);
+  font-family: var(--font-mono);
 }
 
-.retro-btn-primary:hover {
-  background-color: #660000;
+.tg-input:focus {
+  outline: none;
+  border-color: #fcee0a;
 }
 
-.retro-btn-primary:active {
-  transform: translate(1px, 1px);
+/* Tactical Hazard Slash background for terminated status */
+.hud-hazard-red {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 0, 60, 0.12),
+    rgba(255, 0, 60, 0.12) 8px,
+    rgba(16, 18, 22, 0.85) 8px,
+    rgba(16, 18, 22, 0.85) 16px
+  );
+  border-color: #ff003c !important;
 }
 
-.retro-btn-secondary {
-  background-color: #f0ede5;
-  color: #111111;
+.hud-hazard-yellow {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(252, 238, 10, 0.1),
+    rgba(252, 238, 10, 0.1) 8px,
+    rgba(16, 18, 22, 0.85) 8px,
+    rgba(16, 18, 22, 0.85) 16px
+  );
 }
 
-.retro-btn-secondary:hover {
-  background-color: #e2ddd3;
+/* Corner Bracket Accents */
+.corner-bracket-tl {
+  position: relative;
+}
+.corner-bracket-tl::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #fcee0a;
+  border-left: 2px solid #fcee0a;
+  pointer-events: none;
 }
 
-.retro-btn-secondary:active {
-  transform: translate(1px, 1px);
+/* Micro-interaction Keyframes */
+@keyframes hud-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 0); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0); }
 }
 
-/* Compatibility fallbacks for existing classes */
-.bg-noir-card {
-  background-color: #ffffff;
-  border: 2px solid #000000;
-  box-shadow: 2px 2px 0px #000000;
+@keyframes hud-flicker {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  40% { opacity: 0.7; }
+  60% { opacity: 1; }
+  80% { opacity: 0.85; }
+  100% { opacity: 1; }
 }
 
-.bg-noir-card-highlight {
-  background-color: #ffffff;
-  border: 2px solid #800000;
-  box-shadow: 2px 2px 0px #800000;
+@keyframes hud-modal-snap {
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.glow-crimson {
-  box-shadow: 2px 2px 0px #800000;
+.animate-tg-modal, .animate-hud-modal {
+  animation: hud-modal-snap 0.12s cubic-bezier(0, 0, 0.2, 1) forwards;
 }
 
-.glow-gold {
-  box-shadow: 2px 2px 0px #000000;
+.animate-tg-fade, .animate-hud-fade {
+  animation: hud-flicker 0.15s ease-out forwards;
 }
 
-/* Classic boxy scrollbar */
+/* HUD sharp technical scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0ede5;
-  border-left: 1px solid #000000;
+  background: #08090b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c0bab0;
-  border: 1px solid #000000;
+  background: rgba(252, 238, 10, 0.35);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9a948a;
+  background: #fcee0a;
 }
+

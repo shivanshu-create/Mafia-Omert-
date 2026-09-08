@@ -21,43 +21,43 @@ export const SharedRoleReveal: React.FC = () => {
       case 'Mafia':
         return {
           title: 'MAFIA',
-          subtitle: 'The Syndicate',
-          description: 'Eliminate all town members during the night and blend in during day discussions without raising suspicion.',
-          icon: <SkullIcon className="w-10 h-10 text-[#800000]" />,
-          borderColor: 'border-[#800000]',
-          bgColor: 'bg-[#fbebee]',
-          textColor: 'text-[#800000]',
+          subtitle: 'The Mafia',
+          description: 'Eliminate villagers during the night and blend into daytime discussions without getting caught.',
+          icon: <SkullIcon className="w-10 h-10 text-[#ff003c]" />,
+          borderColor: 'border-[#ff003c]',
+          bgColor: 'bg-[#ff003c]/10',
+          textColor: 'text-[#ff003c]',
         };
       case 'Detective':
         return {
           title: 'DETECTIVE',
-          subtitle: 'The Law',
-          description: 'Investigate suspects each night to uncover their true identities and guide the town toward justice.',
-          icon: <Eye className="w-10 h-10 text-[#003399]" />,
-          borderColor: 'border-[#003399]',
-          bgColor: 'bg-[#eef4ff]',
-          textColor: 'text-[#003399]',
+          subtitle: 'The Detective',
+          description: 'Investigate one player each night to learn if they are Mafia or innocent.',
+          icon: <Eye className="w-10 h-10 text-[#00e5ff]" />,
+          borderColor: 'border-[#00e5ff]',
+          bgColor: 'bg-[#00e5ff]/10',
+          textColor: 'text-[#00e5ff]',
         };
       case 'Doctor':
         return {
           title: 'DOCTOR',
-          subtitle: 'The Medic',
-          description: 'Protect one innocent life from elimination each night through your medical interventions.',
-          icon: <Heart className="w-10 h-10 text-[#1e824c]" />,
-          borderColor: 'border-[#1e824c]',
-          bgColor: 'bg-[#eafaf1]',
-          textColor: 'text-[#1e824c]',
+          subtitle: 'The Doctor',
+          description: 'Protect one player each night to prevent them from being killed by the Mafia.',
+          icon: <Heart className="w-10 h-10 text-[#00ff9f]" />,
+          borderColor: 'border-[#00ff9f]',
+          bgColor: 'bg-[#00ff9f]/10',
+          textColor: 'text-[#00ff9f]',
         };
       case 'Villager':
       default:
         return {
           title: 'VILLAGER',
-          subtitle: 'The Townfolk',
-          description: 'Work alongside your fellow citizens to deduce, interrogate, and vote out the hidden Mafia.',
-          icon: <User className="w-10 h-10 text-black" />,
-          borderColor: 'border-black',
-          bgColor: 'bg-white',
-          textColor: 'text-black',
+          subtitle: 'The Villager',
+          description: 'Work together with fellow villagers to find and vote out the Mafia during the day.',
+          icon: <User className="w-10 h-10 text-[#fcee0a]" />,
+          borderColor: 'border-[#fcee0a]/50',
+          bgColor: 'bg-[#141824]',
+          textColor: 'text-[#fcee0a]',
         };
     }
   };
@@ -65,61 +65,64 @@ export const SharedRoleReveal: React.FC = () => {
   const config = getRoleConfig(role);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75">
-      <div className="w-full max-w-sm max-h-[90vh] overflow-y-auto rounded-none bg-white border-2 border-black shadow-none p-4 sm:p-6 text-center relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 font-mono">
+      <div className="w-full max-w-sm max-h-[90vh] overflow-y-auto bg-[#101216] border border-[#fcee0a] hud-cut shadow-[0_0_35px_rgba(0,0,0,0.95)] p-5 sm:p-6 text-center relative animate-hud-modal-snap">
+        {/* Top Cyberpunk Hazard Stripe */}
+        <div className="h-1.5 w-full bg-[#fcee0a] hud-hazard-yellow mb-4" />
+
         {/* Privacy Curtain: Before current player has tapped */}
         {!isRevealed ? (
-          <div className="space-y-4 py-3">
-            <div className="w-14 h-14 rounded-none bg-[#efefef] border-2 border-black flex items-center justify-center text-[#800000] mx-auto">
+          <div className="space-y-4 py-2">
+            <div className="w-14 h-14 bg-[#fcee0a]/10 border border-[#fcee0a]/40 flex items-center justify-center text-[#fcee0a] mx-auto">
               <Lock className="w-7 h-7" />
             </div>
 
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-none bg-[#fff3cd] border border-black text-[#856404] text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-[#fcee0a]/20 border border-[#fcee0a]/40 text-[#fcee0a] text-[10px] font-bold uppercase tracking-wider mb-2">
                 <Smartphone className="w-3.5 h-3.5" />
-                <span>Pass-the-Phone</span>
+                <span>PASS-THE-PHONE</span>
               </div>
-              <h2 className="font-mono font-black text-xl text-black tracking-wider uppercase">
-                HAND PHONE TO
+              <h2 className="text-[10px] uppercase font-bold text-[#7d8799] tracking-wider">
+                PASS PHONE TO
               </h2>
-              <div className="font-mono text-2xl sm:text-3xl font-black text-[#800000] mt-1 uppercase tracking-wide">
+              <div className="text-2xl sm:text-3xl font-bold text-[#fcee0a] mt-1 tracking-wider uppercase">
                 {playerName}
               </div>
             </div>
 
-            <p className="text-xs text-stone-600 leading-relaxed px-3 font-mono">
-              Pass this device to <strong className="text-black">{playerName}</strong>. No one else should look at the screen while tapping below.
+            <p className="text-xs text-[#7d8799] leading-relaxed px-2">
+              Pass phone to <strong className="text-white">{playerName}</strong>. Everyone else look away before viewing role.
             </p>
 
             <button
               onClick={() => setIsRevealed(true)}
-              className="retro-btn-primary w-full py-3 px-4 text-xs font-mono font-black uppercase tracking-wider"
+              className="hud-btn hud-btn-primary w-full py-3 text-xs"
             >
-              I am {playerName} &bull; Reveal Role
+              [ I AM {playerName.toUpperCase()} &bull; REVEAL ROLE ]
             </button>
           </div>
         ) : (
           /* Secret Role Revealed Screen */
-          <div className="space-y-4 py-2">
-            <div className="flex items-center justify-between text-xs text-stone-700 border-b-2 border-black pb-2 font-mono">
-              <span className="uppercase tracking-widest text-[10px] font-bold">Confidential Role</span>
-              <span className="font-black text-black">{playerName}</span>
+          <div className="space-y-4 py-1">
+            <div className="flex items-center justify-between text-xs text-[#7d8799] border-b border-[#fcee0a]/20 pb-2.5">
+              <span className="uppercase tracking-wider text-[10px] font-bold text-[#fcee0a]">[ SECRET ROLE ]</span>
+              <span className="font-bold text-white uppercase">{playerName}</span>
             </div>
 
             {/* Role Card Banner */}
             <div
-              className={`p-5 rounded-none ${config.bgColor} border-2 ${config.borderColor} text-center space-y-2`}
+              className={`p-5 hud-cut-sm ${config.bgColor} border ${config.borderColor} text-center space-y-2.5`}
             >
               <div className="flex justify-center">{config.icon}</div>
               <div>
-                <h3 className={`font-mono font-black text-2xl tracking-widest ${config.textColor}`}>
+                <h3 className={`font-bold text-2xl tracking-wider uppercase ${config.textColor}`}>
                   {config.title}
                 </h3>
-                <div className="text-[11px] font-mono font-bold text-stone-600 uppercase tracking-wider mt-0.5">
+                <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-0.5">
                   {config.subtitle}
                 </div>
               </div>
-              <p className="text-xs text-stone-700 leading-relaxed max-w-xs mx-auto pt-1 font-mono">
+              <p className="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto pt-1 font-mono">
                 {config.description}
               </p>
             </div>
@@ -127,14 +130,14 @@ export const SharedRoleReveal: React.FC = () => {
             {/* Confirmation Pass-Phone Button */}
             <button
               onClick={handleConfirmAndPass}
-              className="retro-btn-secondary w-full py-3 px-4 text-xs font-mono font-black uppercase tracking-wider flex items-center justify-center gap-2"
+              className="hud-btn hud-btn-secondary w-full py-3 text-xs flex items-center justify-center gap-2"
             >
-              <Check className="w-4 h-4 text-black" />
-              <span>Got it, pass the phone</span>
+              <Check className="w-4 h-4 text-[#00ff9f]" />
+              <span>[ GOT IT &bull; PASS PHONE ]</span>
             </button>
 
-            <p className="text-[10px] font-mono font-bold text-stone-600 uppercase tracking-widest">
-              Maintain the Omertà code of silence
+            <p className="text-[10px] font-bold text-[#7d8799] tracking-widest uppercase">
+              Maintain the Code of Silence
             </p>
           </div>
         )}

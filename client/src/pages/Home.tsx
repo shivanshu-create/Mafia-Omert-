@@ -93,122 +93,120 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-6 sm:py-8 font-sans">
-      {/* Title */}
-      <div className="text-center mb-6">
-        <h2 className="font-black text-2xl sm:text-3xl text-black tracking-wider uppercase">
-          MAFIA OMERTÀ
-        </h2>
-      </div>
+    <div className="max-w-md mx-auto px-4 py-6 font-mono space-y-4">
 
       {/* Kicked or Error Notification */}
       {(kickedReason || errorMessage) && (
-        <div className="mb-5 p-3 bg-red-100 border-2 border-[#800000] text-black text-xs flex items-start gap-2.5 shadow-[2px_2px_0px_#800000]">
-          <AlertCircle className="w-4 h-4 text-[#800000] shrink-0 mt-0.5" />
+        <div className="p-3.5 bg-[#ff003c]/10 border border-[#ff003c]/40 text-[#ff003c] text-xs flex items-start gap-3 hud-cut-sm animate-hud-fade">
+          <AlertCircle className="w-4 h-4 text-[#ff003c] shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="font-bold text-[#800000] uppercase tracking-wide">SYSTEM NOTICE</p>
-            <p className="text-xs text-stone-800 mt-0.5">{kickedReason || errorMessage}</p>
+            <p className="font-bold text-[#ff003c] uppercase tracking-wider text-[10px]">[ ALERT ]</p>
+            <p className="text-xs text-stone-300 mt-0.5">{kickedReason || errorMessage}</p>
           </div>
           <button
             onClick={() => {
               clearKickedReason();
               setErrorMessage(null);
             }}
-            className="text-black hover:text-[#800000] text-xs uppercase font-black underline"
+            className="text-[#7d8799] hover:text-white text-xs underline px-1 uppercase"
           >
-            Dismiss
+            [X]
           </button>
         </div>
       )}
 
       {/* Reconnect Banner if stored session found */}
       {hasStoredSession && (
-        <div className="mb-5 border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
-          <div className="bg-[#800000] text-white px-3 py-1 font-bold text-xs uppercase tracking-wide border-b-2 border-black flex items-center justify-between">
-            <span>ACTIVE SESSION DETECTED</span>
+        <div className="bg-[#101216] border border-[#fcee0a]/35 p-4 sm:p-5 space-y-3 hud-cut animate-hud-fade">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#fcee0a] uppercase tracking-wider">[ ACTIVE SESSION DETECTED ]</span>
             <button
               onClick={handleDismissSession}
-              className="text-stone-200 hover:text-white text-[11px] underline uppercase"
+              className="text-[#7d8799] hover:text-white text-xs underline"
             >
-              Forget
+              [ FORGET ]
             </button>
           </div>
-          <div className="p-3">
-            <p className="text-xs text-stone-800 mb-2.5">
-              Active match found for room{' '}
-              <span className="font-mono font-bold bg-stone-100 px-1.5 py-0.5 border border-black">{hasStoredSession.code}</span> as{' '}
-              <span className="font-bold">{hasStoredSession.isMod ? 'Moderator' : 'Player'}</span>.
+          <div>
+            <p className="text-xs text-stone-300">
+              Active game found for room{' '}
+              <span className="font-bold bg-[#14171f] text-[#fcee0a] px-2 py-0.5 border border-[#fcee0a]/40">
+                {hasStoredSession.code}
+              </span>{' '}
+              as <span className="font-bold text-white uppercase">{hasStoredSession.isMod ? 'Moderator' : 'Player'}</span>.
             </p>
-            <button
-              onClick={handleRejoinExisting}
-              className="retro-btn retro-btn-primary w-full shadow-[1px_1px_0px_#000000]"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Resume Room {hasStoredSession.code}
-            </button>
           </div>
+          <button
+            onClick={handleRejoinExisting}
+            className="hud-btn hud-btn-primary w-full py-2.5 font-bold"
+          >
+            <RefreshCw className="w-4 h-4" />
+            [ RESUME GAME: {hasStoredSession.code} ]
+          </button>
         </div>
       )}
 
       {/* Action Modules */}
-      <div className="space-y-5">
+      <div className="space-y-4">
         {/* Host / Create Room */}
-        <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
-          <div className="bg-[#800000] text-white px-3 py-1.5 font-bold text-xs uppercase tracking-wider border-b-2 border-black flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Shield className="w-4 h-4" />
-              <span>HOST A GAME &bull; MODERATOR PORTAL</span>
+        <div className="bg-[#101216] border border-[#fcee0a]/25 p-5 sm:p-6 space-y-4 hud-cut">
+          <div className="flex items-center justify-between border-b border-[#fcee0a]/20 pb-3">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-[#fcee0a]" />
+              <span className="font-bold text-xs sm:text-sm text-white uppercase tracking-wider">[ HOST A GAME ]</span>
             </div>
-            <span className="text-[10px] bg-black text-amber-300 px-1 py-0.2 font-mono">NEW ROOM</span>
+            <span className="text-[10px] font-bold bg-[#fcee0a]/15 text-[#fcee0a] border border-[#fcee0a]/30 px-2 py-0.5">
+              NEW ROOM
+            </span>
           </div>
 
-          <div className="p-4">
+          <div className="space-y-3.5">
             {/* Mode Selector */}
-            <div className="mb-4">
-              <label className="block text-[11px] uppercase tracking-wider font-bold text-black mb-1.5">
-                Select Setup Mode:
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-[#7d8799] mb-2">
+                SELECT SETUP MODE:
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 bg-[#08090b] p-1.5 border border-[#fcee0a]/20">
                 <button
                   type="button"
                   onClick={() => setSelectedMode('multi_phone')}
-                  className={`p-2 border-2 border-black text-xs font-bold flex flex-col items-center gap-1 transition-all ${
+                  className={`p-2.5 text-xs font-bold uppercase flex flex-col items-center gap-1 transition-all ${
                     selectedMode === 'multi_phone'
-                      ? 'bg-[#800000] text-white shadow-[1px_1px_0px_#000000]'
-                      : 'bg-[#f0ede5] text-black hover:bg-white'
+                      ? 'bg-[#fcee0a] text-black'
+                      : 'text-[#7d8799] hover:text-white hover:bg-[#14171f]'
                   }`}
                 >
-                  <div className="flex items-center gap-1 font-bold">
+                  <div className="flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5" />
                     <span>Multi-Phone</span>
                   </div>
-                  <span className={`text-[10px] ${selectedMode === 'multi_phone' ? 'text-stone-200' : 'text-stone-600'}`}>
-                    1 device / player
+                  <span className="text-[9px] opacity-80">
+                    [1 PHONE / PLAYER]
                   </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setSelectedMode('two_phone')}
-                  className={`p-2 border-2 border-black text-xs font-bold flex flex-col items-center gap-1 transition-all ${
+                  className={`p-2.5 text-xs font-bold uppercase flex flex-col items-center gap-1 transition-all ${
                     selectedMode === 'two_phone'
-                      ? 'bg-[#800000] text-white shadow-[1px_1px_0px_#000000]'
-                      : 'bg-[#f0ede5] text-black hover:bg-white'
+                      ? 'bg-[#fcee0a] text-black'
+                      : 'text-[#7d8799] hover:text-white hover:bg-[#14171f]'
                   }`}
                 >
-                  <div className="flex items-center gap-1 font-bold">
+                  <div className="flex items-center gap-1.5">
                     <Smartphone className="w-3.5 h-3.5" />
                     <span>Two-Phone</span>
                   </div>
-                  <span className={`text-[10px] ${selectedMode === 'two_phone' ? 'text-stone-200' : 'text-stone-600'}`}>
-                    1 shared player phone
+                  <span className="text-[9px] opacity-80">
+                    [1 SHARED PHONE]
                   </span>
                 </button>
               </div>
 
               <div className="mt-2 px-0.5">
-                <span className="text-[11px] text-stone-600">
-                  {selectedMode === 'multi_phone' ? 'Each player joins on their own phone' : 'Moderator phone + 1 shared player phone'}
+                <span className="text-[10px] text-[#7d8799] uppercase">
+                  {selectedMode === 'multi_phone' ? 'Each player joins on their own phone' : 'One shared phone passed around the group'}
                 </span>
               </div>
             </div>
@@ -216,34 +214,33 @@ export const Home: React.FC = () => {
             <button
               onClick={handleCreateRoom}
               disabled={isCreating || !isConnected}
-              className="retro-btn retro-btn-primary w-full py-2.5 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="hud-btn hud-btn-primary w-full py-3 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4" />
-              {isCreating ? 'Creating Room...' : `Create ${selectedMode === 'two_phone' ? 'Two-Phone' : 'Multi-Phone'} Game`}
+              {isCreating ? '[ CREATING ROOM... ]' : selectedMode === 'two_phone' ? '[ CREATE TWO-PHONE GAME ]' : '[ CREATE MULTI-PHONE GAME ]'}
             </button>
           </div>
         </div>
 
         {/* Join Existing Room */}
-        <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
-          <div className="bg-[#800000] text-white px-3 py-1.5 font-bold text-xs uppercase tracking-wider border-b-2 border-black flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Users className="w-4 h-4" />
-              <span>JOIN A GAME &bull; PLAYER ACCESS</span>
+        <div className="bg-[#101216] border border-[#fcee0a]/25 p-5 sm:p-6 space-y-4 hud-cut">
+          <div className="flex items-center justify-between border-b border-[#fcee0a]/20 pb-3">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#fcee0a]" />
+              <span className="font-bold text-xs sm:text-sm text-white uppercase tracking-wider">[ JOIN A GAME ]</span>
             </div>
-            <span className="text-[10px] bg-black text-white px-1 py-0.2 font-mono">CLIENT</span>
+            <span className="text-[10px] font-bold bg-[#14171f] text-[#7d8799] border border-white/10 px-2 py-0.5">
+              PLAYER
+            </span>
           </div>
 
-          <div className="p-4">
-            <p className="text-xs text-stone-700 mb-3">
-              Enter the 4–5 character room code provided by your host or moderator:
+          <div className="space-y-3.5">
+            <p className="text-xs text-[#7d8799]">
+              Enter 4–5 character room code:
             </p>
 
             <form onSubmit={handleJoinSubmit} className="space-y-3">
               <div>
-                <label htmlFor="roomCodeInput" className="block text-[11px] uppercase font-bold text-black mb-1">
-                  Room Code:
-                </label>
                 <input
                   id="roomCodeInput"
                   type="text"
@@ -253,22 +250,22 @@ export const Home: React.FC = () => {
                     setInputCode(e.target.value.toUpperCase());
                     setErrorMessage(null);
                   }}
-                  placeholder="e.g. 7X9K"
-                  className="w-full px-3 py-2 bg-white border-2 border-black text-black font-mono font-bold text-center text-lg tracking-widest placeholder:text-stone-400 focus:outline-none focus:bg-yellow-50 uppercase"
+                  placeholder="E.G. 7X9K"
+                  className="w-full px-4 py-3 bg-[#08090b] border border-[#fcee0a]/30 text-[#fcee0a] font-mono font-bold text-center text-xl tracking-widest placeholder:text-stone-600 focus:outline-none focus:border-[#fcee0a] focus:ring-1 focus:ring-[#fcee0a] transition-all uppercase"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isValidating || !inputCode.trim() || !isConnected}
-                className="retro-btn retro-btn-secondary w-full py-2.5 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hud-btn hud-btn-secondary w-full py-3 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isValidating ? (
-                  <span>Checking Code...</span>
+                  <span>[ CHECKING CODE... ]</span>
                 ) : (
                   <>
-                    <span>Proceed to Seat</span>
-                    <ArrowRight className="w-4 h-4 text-[#800000]" />
+                    <span>[ JOIN ROOM ]</span>
+                    <ArrowRight className="w-4 h-4 text-[#fcee0a]" />
                   </>
                 )}
               </button>
@@ -277,14 +274,14 @@ export const Home: React.FC = () => {
         </div>
 
         {/* In-App How to Play Guide Button */}
-        <div className="pt-2 text-center">
+        <div className="pt-1 text-center">
           <button
             type="button"
             onClick={() => setIsHelpOpen(true)}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-black hover:text-[#800000] transition-colors py-1.5 px-3 bg-[#f0ede5] hover:bg-white border-2 border-black shadow-[1px_1px_0px_#000000] uppercase"
+            className="inline-flex items-center gap-2 text-xs font-bold text-[#7d8799] hover:text-[#fcee0a] transition-colors py-2 px-4 border border-[#fcee0a]/20 bg-[#101216] hover:border-[#fcee0a]/50 uppercase tracking-wider"
           >
-            <BookOpen className="w-3.5 h-3.5 text-[#800000]" />
-            <span>How to Play & Quick Rules Reference</span>
+            <BookOpen className="w-4 h-4 text-[#fcee0a]" />
+            <span>[ ? HOW TO PLAY & QUICK REFERENCE ]</span>
           </button>
         </div>
       </div>

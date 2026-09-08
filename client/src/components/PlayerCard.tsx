@@ -32,39 +32,39 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
 
   return (
     <div
-      className={`relative flex items-center justify-between p-2.5 rounded-none border-2 transition-none select-none ${
+      className={`relative flex items-center justify-between p-3 hud-cut-sm border select-none font-mono ${
         isCurrentPlayer
-          ? 'bg-[#fff9f9] border-[#800000] ring-2 ring-[#800000]'
-          : 'bg-white border-black text-black'
+          ? 'bg-[#141824] border-[#fcee0a] shadow-[0_0_10px_rgba(252,238,10,0.15)] text-white'
+          : 'bg-[#101216] border-[#fcee0a]/20 text-stone-200'
       }`}
     >
-      <div className="flex items-center gap-2.5 min-w-0">
-        {/* Avatar */}
+      <div className="flex items-center gap-3 min-w-0">
+        {/* Avatar / Designation Symbol */}
         <div
-          className="w-8 h-8 rounded-none bg-[#efefef] border-2 border-black flex items-center justify-center font-mono font-black text-sm text-black shrink-0"
+          className="w-9 h-9 bg-[#08090b] border border-[#fcee0a]/40 flex items-center justify-center font-bold text-sm text-[#fcee0a] shrink-0"
         >
           {initial}
         </div>
 
         {/* Name and Status */}
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="font-mono font-black text-black text-xs sm:text-sm truncate">{player.name}</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-white text-xs sm:text-sm uppercase tracking-wider truncate">{player.name}</span>
             {isCurrentPlayer && (
-              <span className="text-[9px] font-mono font-black uppercase tracking-wider bg-[#800000] text-white border border-black px-1.5 py-0.2 rounded-none shrink-0">
-                You
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-[#fcee0a] text-black px-2 py-0.5 shrink-0">
+                [ YOU ]
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-1.5 mt-0.5">
             <span
-              className={`w-2 h-2 rounded-none border border-black ${
-                player.isConnected ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'
+              className={`w-1.5 h-1.5 ${
+                player.isConnected ? 'bg-[#00ff9f]' : 'bg-[#ff003c] animate-ping'
               }`}
             />
-            <span className="text-[10px] text-stone-600 font-mono">
-              {player.isConnected ? 'Connected' : 'Reconnecting...'}
+            <span className="text-[10px] uppercase tracking-wider text-[#7d8799]">
+              {player.isConnected ? 'Connected' : 'Offline'}
             </span>
           </div>
         </div>
@@ -74,18 +74,18 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
       {isModerator && (
         <div className="flex items-center gap-1 ml-2 shrink-0">
           {confirmKick ? (
-            <div className="flex items-center gap-1 bg-[#fff3cd] border-2 border-black p-1 rounded-none">
+            <div className="flex items-center gap-1.5 bg-[#08090b] border border-[#ff003c] p-1">
               <button
                 onClick={handleKickClick}
-                className="retro-btn-primary px-2 py-0.5 text-xs font-mono font-bold"
+                className="px-2.5 py-1 bg-[#ff003c] text-black text-xs font-bold uppercase tracking-wider flex items-center gap-1"
                 title="Confirm Kick"
               >
                 <Check className="w-3.5 h-3.5" />
-                <span>Kick</span>
+                <span>[ REMOVE ]</span>
               </button>
               <button
                 onClick={() => setConfirmKick(false)}
-                className="p-1 rounded-none text-black hover:bg-stone-300 border border-black"
+                className="p-1 text-[#7d8799] hover:text-white"
                 title="Cancel"
               >
                 <X className="w-3.5 h-3.5" />
@@ -94,11 +94,10 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
           ) : (
             <button
               onClick={handleKickClick}
-              className="p-1.5 rounded-none text-black hover:bg-[#800000] hover:text-white border border-black text-xs font-mono font-bold flex items-center gap-1"
+              className="p-1.5 text-stone-400 hover:text-[#ff003c] hover:bg-[#ff003c]/20 border border-[#fcee0a]/20 text-xs font-semibold flex items-center gap-1"
               title={`Remove ${player.name} from room`}
             >
               <UserX className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Kick</span>
             </button>
           )}
         </div>

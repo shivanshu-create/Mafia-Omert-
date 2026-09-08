@@ -132,65 +132,69 @@ export const JoinRoom: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-6 sm:py-8 font-sans">
+    <div className="max-w-md mx-auto px-4 py-6 font-mono space-y-4">
       {/* Back button */}
-      <div className="mb-4">
+      <div>
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-black hover:text-[#800000] border-2 border-black bg-[#f0ede5] hover:bg-white px-2.5 py-1 shadow-[1px_1px_0px_#000000] transition-colors"
+          className="hud-btn hud-btn-secondary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#800000]" />
-          <span>&laquo; Back to Home</span>
+          <ArrowLeft className="w-3.5 h-3.5 text-[#fcee0a]" />
+          <span>{'[ < BACK ]'}</span>
         </Link>
       </div>
 
       {/* Loading state during room verification */}
       {isValidating ? (
-        <div className="border-2 border-black bg-white p-6 text-center shadow-[2px_2px_0px_#000000]">
-          <Loader2 className="w-6 h-6 text-[#800000] animate-spin mx-auto mb-3" />
-          <p className="text-xs font-bold text-black uppercase tracking-wider">Verifying Room {formattedCode}...</p>
-          <p className="text-[11px] text-stone-600 mt-0.5">Connecting to game server...</p>
+        <div className="bg-[#101216] border border-[#fcee0a]/30 p-8 text-center hud-cut space-y-3 animate-hud-fade">
+          <Loader2 className="w-8 h-8 text-[#fcee0a] animate-spin mx-auto mb-3" />
+          <p className="text-sm font-bold text-white tracking-wider uppercase">[ CHECKING ROOM // {formattedCode} ]</p>
+          <p className="text-xs text-[#7d8799] mt-1">Connecting to server...</p>
         </div>
       ) : !isRoomValid ? (
         /* Room Not Found / Expired Error State */
-        <div className="border-2 border-[#800000] bg-white p-6 text-center shadow-[2px_2px_0px_#800000]">
-          <div className="w-10 h-10 bg-red-100 border-2 border-[#800000] flex items-center justify-center text-[#800000] mx-auto mb-3">
-            <AlertCircle className="w-5 h-5" />
+        <div className="bg-[#101216] border border-[#ff003c]/40 p-6 text-center hud-cut space-y-4 animate-hud-fade">
+          <div className="w-12 h-12 bg-[#ff003c]/15 border border-[#ff003c]/40 flex items-center justify-center text-[#ff003c] mx-auto">
+            <AlertCircle className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-base text-[#800000] uppercase tracking-wider mb-1">Room Not Found</h3>
-          <p className="text-xs text-black mb-2">
-            Code <span className="font-mono font-bold bg-stone-100 px-1.5 py-0.5 border border-black">{formattedCode}</span> is invalid or the game has ended.
-          </p>
-          <p className="text-[11px] text-stone-600 mb-5">{validationError}</p>
+          <div>
+            <h3 className="font-bold text-sm text-[#ff003c] mb-1 tracking-wider uppercase">[ ROOM NOT FOUND ]</h3>
+            <p className="text-xs text-stone-300">
+              Room code <span className="font-bold bg-[#0c0e12] px-2 py-0.5 border border-[#ff003c]/50 text-[#fcee0a]">{formattedCode}</span> is invalid or no longer active.
+            </p>
+            <p className="text-xs text-[#7d8799] mt-1">{validationError}</p>
+          </div>
 
           <Link
             to="/"
-            className="retro-btn retro-btn-secondary w-full shadow-[1px_1px_0px_#000000]"
+            className="hud-btn hud-btn-secondary w-full py-2.5 text-xs inline-block text-center"
           >
-            Enter Another Room Code
+            [ ENTER ANOTHER CODE ]
           </Link>
         </div>
       ) : roomGameMode === 'two_phone' ? (
         /* Two-Phone Mode Detected -> Connect as Shared Device */
-        <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
-          <div className="bg-[#800000] text-white px-3 py-1.5 font-bold text-xs uppercase tracking-wider border-b-2 border-black flex items-center justify-between">
-            <span>TWO-PHONE MODE &bull; SHARED DEVICE</span>
-            <span className="font-mono text-amber-300">{formattedCode}</span>
+        <div className="bg-[#101216] border border-[#fcee0a]/30 p-6 hud-cut space-y-5 animate-hud-fade">
+          <div className="flex items-center justify-between pb-3 border-b border-[#fcee0a]/20">
+            <span className="text-xs font-bold text-[#7d8799] uppercase tracking-wider">[ TWO-PHONE MODE ]</span>
+            <span className="font-bold text-[#fcee0a] bg-[#0c0e12] px-2.5 py-0.5 border border-[#fcee0a]/40 tracking-widest">{formattedCode}</span>
           </div>
 
-          <div className="p-5 text-center">
-            <div className="w-12 h-12 bg-[#f0ede5] border-2 border-black flex items-center justify-center text-[#800000] mx-auto mb-3 shadow-[1px_1px_0px_#000000]">
-              <Smartphone className="w-6 h-6" />
+          <div className="text-center space-y-4">
+            <div className="w-14 h-14 bg-[#fcee0a]/10 border border-[#fcee0a]/40 flex items-center justify-center text-[#fcee0a] mx-auto">
+              <Smartphone className="w-7 h-7" />
             </div>
 
-            <h3 className="font-bold text-base text-black uppercase tracking-wide mb-1">Shared Player Device</h3>
-            <p className="text-xs text-stone-700 mb-5 leading-relaxed">
-              Room uses one shared device passed around the group for viewing secret roles and voting.
-            </p>
+            <div>
+              <h3 className="font-bold text-sm text-white uppercase tracking-wider mb-1">[ SHARED PLAYER PHONE ]</h3>
+              <p className="text-xs text-[#7d8799] leading-relaxed max-w-xs mx-auto">
+                Room uses one shared phone passed around the group for viewing secret roles and casting private votes.
+              </p>
+            </div>
 
             {joinError && (
-              <div className="mb-4 p-2.5 bg-red-100 border-2 border-[#800000] text-black text-xs flex items-start gap-2 text-left">
-                <AlertCircle className="w-4 h-4 text-[#800000] shrink-0 mt-0.5" />
+              <div className="p-3 bg-[#ff003c]/10 border border-[#ff003c]/40 text-[#ff003c] text-xs flex items-start gap-2 text-left">
+                <AlertCircle className="w-4 h-4 text-[#ff003c] shrink-0 mt-0.5" />
                 <span>{joinError}</span>
               </div>
             )}
@@ -198,27 +202,30 @@ export const JoinRoom: React.FC = () => {
             <button
               onClick={handleConnectSharedDevice}
               disabled={isJoining || !isConnected}
-              className="retro-btn retro-btn-primary w-full py-2.5 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="hud-btn hud-btn-primary w-full py-3 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Smartphone className="w-4 h-4" />
-              {isJoining ? 'Connecting...' : 'Connect as Shared Phone'}
+              {isJoining ? '[ CONNECTING... ]' : '[ CONNECT AS SHARED PHONE ]'}
             </button>
           </div>
         </div>
       ) : (
         /* Multi-Phone Mode -> Join Form */
-        <div className="border-2 border-black bg-white shadow-[2px_2px_0px_#000000]">
+        <div className="bg-[#101216] border border-[#fcee0a]/30 p-6 hud-cut space-y-5 animate-hud-fade">
           {/* Room Header */}
-          <div className="bg-[#800000] text-white px-3 py-1.5 font-bold text-xs uppercase tracking-wider border-b-2 border-black flex items-center justify-between">
-            <span>JOIN ROOM MANIFEST</span>
-            <span className="font-mono text-amber-300 font-bold tracking-widest">{formattedCode}</span>
+          <div className="flex items-center justify-between pb-3 border-b border-[#fcee0a]/20">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-[#00ff9f]" />
+              <span className="font-bold text-xs text-white uppercase tracking-wider">[ JOIN ROOM ]</span>
+            </div>
+            <span className="font-bold text-[#fcee0a] bg-[#0c0e12] px-2.5 py-0.5 border border-[#fcee0a]/40 tracking-widest">{formattedCode}</span>
           </div>
 
-          <div className="p-5">
+          <div>
             {/* Join Error Banner */}
             {joinError && (
-              <div className="mb-4 p-2.5 bg-red-100 border-2 border-[#800000] text-black text-xs flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-[#800000] shrink-0 mt-0.5" />
+              <div className="mb-4 p-3 bg-[#ff003c]/10 border border-[#ff003c]/40 text-[#ff003c] text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-[#ff003c] shrink-0 mt-0.5" />
                 <span>{joinError}</span>
               </div>
             )}
@@ -226,11 +233,11 @@ export const JoinRoom: React.FC = () => {
             {/* Join Form */}
             <form onSubmit={handleJoinSubmit} className="space-y-4">
               <div>
-                <label htmlFor="playerNameInput" className="block text-[11px] uppercase font-bold text-black mb-1">
-                  Enter Your Character / Player Name:
+                <label htmlFor="playerNameInput" className="block text-[10px] uppercase font-bold text-[#7d8799] mb-2 tracking-wider">
+                  ENTER YOUR NAME:
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-500">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7d8799]">
                     <User className="w-4 h-4" />
                   </div>
                   <input
@@ -243,21 +250,21 @@ export const JoinRoom: React.FC = () => {
                       setPlayerName(e.target.value);
                       setJoinError(null);
                     }}
-                    placeholder="e.g. Vito, Sonny, Michael"
-                    className="w-full pl-9 pr-3 py-2 bg-white border-2 border-black text-black placeholder:text-stone-400 focus:outline-none focus:bg-yellow-50 text-sm font-bold"
+                    placeholder="E.G. VITO, SONNY, MICHAEL"
+                    className="w-full pl-10 pr-4 py-3 bg-[#08090b] border border-[#fcee0a]/30 text-[#fcee0a] placeholder:text-stone-600 text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-[#fcee0a] focus:ring-1 focus:ring-[#fcee0a] uppercase transition-all"
                   />
                 </div>
-                <p className="text-[10px] text-stone-600 mt-1">
-                  Max 20 characters &bull; Appears on the town manifest and ballot roster.
+                <p className="text-[10px] text-[#7d8799] mt-1.5 px-0.5 uppercase">
+                  Max 20 characters • Visible to all players
                 </p>
               </div>
 
               <button
                 type="submit"
                 disabled={isJoining || !playerName.trim() || !isConnected}
-                className="retro-btn retro-btn-primary w-full py-2.5 shadow-[1px_1px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hud-btn hud-btn-primary w-full py-3 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {isJoining ? 'Joining Room...' : 'Enter Game Room'}
+                {isJoining ? '[ JOINING... ]' : '[ JOIN ROOM ]'}
               </button>
             </form>
           </div>

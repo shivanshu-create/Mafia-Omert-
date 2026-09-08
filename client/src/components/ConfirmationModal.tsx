@@ -28,71 +28,69 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 font-mono"
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
     >
-      <div className="relative w-full max-w-sm bg-white border-2 border-black rounded-none p-5 shadow-none text-left">
+      <div className="relative w-full max-w-sm bg-[#101216] border border-[#ff003c] hud-cut p-5 sm:p-6 shadow-[0_0_35px_rgba(255,0,60,0.25)] text-left animate-hud-modal-snap space-y-4">
         {/* Dismiss X button */}
         <button
           type="button"
           onClick={onCancel}
           disabled={isConfirming}
-          className="absolute top-3 right-3 p-1 rounded-none text-black hover:bg-[#800000] hover:text-white border border-black disabled:opacity-50"
+          className="absolute top-4 right-4 p-1.5 text-[#7d8799] hover:text-white disabled:opacity-50"
           title="Dismiss"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Warning Icon & Category */}
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-6 h-6 bg-[#800000] text-white border border-black flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-[#ff003c]/20 border border-[#ff003c] text-[#ff003c] flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4 h-4" />
           </div>
-          <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-[#800000]">
-            Moderator Confirmation
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[#ff003c]">
+            CONFIRM ACTION
           </span>
         </div>
 
         {/* Dialog Title */}
         <h3
           id="confirm-modal-title"
-          className="font-mono font-black text-lg text-black uppercase tracking-wide mb-2"
+          className="font-bold text-base text-white tracking-wider uppercase"
         >
           {title}
         </h3>
 
         {/* Dialog Description */}
         {message && (
-          <div className="text-xs text-stone-700 font-mono mb-5 leading-relaxed">
+          <div className="text-xs text-stone-300 leading-relaxed font-mono">
             {message}
           </div>
         )}
 
         {/* Action Buttons: Cancel and Confirm */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t-2 border-black">
+        <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-[#fcee0a]/20">
           <button
             type="button"
             onClick={onCancel}
             disabled={isConfirming}
-            className="retro-btn retro-btn-secondary w-full py-2 px-3 text-xs font-mono font-bold uppercase tracking-wider disabled:opacity-50"
+            className="hud-btn hud-btn-secondary w-full py-2.5 px-3 text-xs disabled:opacity-50"
           >
-            {cancelLabel}
+            [ {cancelLabel.toUpperCase()} ]
           </button>
           <button
             type="button"
             onClick={onConfirm}
             disabled={isConfirming}
-            className={`retro-btn w-full py-2 px-3 text-xs font-mono font-black uppercase tracking-wider transition-none ${
+            className={`w-full py-2.5 px-3 text-xs font-bold uppercase tracking-wider transition-none ${
               confirmVariant === 'danger'
-                ? 'bg-[#800000] hover:bg-[#660000] text-white'
-                : confirmVariant === 'warning'
-                ? 'bg-amber-300 hover:bg-amber-400 text-black'
-                : 'bg-black hover:bg-stone-800 text-white'
+                ? 'hud-btn hud-btn-danger'
+                : 'hud-btn hud-btn-primary'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {isConfirming ? 'Processing...' : confirmLabel}
+            {isConfirming ? '[ PLEASE WAIT... ]' : `[ ${confirmLabel.toUpperCase()} ]`}
           </button>
         </div>
       </div>

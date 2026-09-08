@@ -1,6 +1,6 @@
 # Mafia Omertà 🩸
 
-**Mafia Omertà** is a sleek, web-based moderator companion and digital board for running the classic social-deduction party game **Mafia** in person. Styled like an atmospheric noir split-flap train-schedule departure board, it replaces physical cards and moderator memory slips with real-time status management, server-authoritative secret role delivery, live public voting, and seamless support for groups where either every player has their own phone (**Multi-Phone Mode**) or a single shared phone is passed around privately (**Two-Phone Mode**).
+**Mafia Omertà** is a sleek, web-based moderator companion and digital board for running the classic social-deduction party game **Mafia** in person. Styled with a high-contrast cyberpunk HUD tactical aesthetic, it replaces physical cards and moderator memory slips with real-time status management, server-authoritative secret role delivery, live public voting, and seamless support for groups where either every player has their own phone (**Multi-Phone Mode**) or a single shared phone is passed around privately (**Two-Phone Mode**).
 
 ---
 
@@ -54,7 +54,7 @@ Open your browser to **`http://localhost:5173`**. Requests to `/api` and `/socke
 ### Running Automated Tests
 
 ```bash
-# Run all Vitest unit and integration suites (40 tests across 9 suites)
+# Run all Vitest unit and integration suites (45 tests across 9 suites)
 npm test
 ```
 
@@ -179,6 +179,6 @@ Mafia Omertà/
 - **Lobby & Room Management**: [`server/src/roomManager.ts`](server/src/roomManager.ts) & [`client/src/pages/Home.tsx`](client/src/pages/Home.tsx)
 - **Role Assignment & Redaction**: [`server/src/socketHandlers.ts`](server/src/socketHandlers.ts) (`moderator:assign_role`, `player:role_updated`)
 - **Night Status & Board Styling**: [`client/src/components/TrainScheduleCard.tsx`](client/src/components/TrainScheduleCard.tsx) & [`StatusSelectorModal.tsx`](client/src/components/StatusSelectorModal.tsx)
-- **Voting Engine & WhatsApp Tally**: [`server/src/socketHandlers.ts`](server/src/socketHandlers.ts) (`voting:start`, `voting:cast`) & [`client/src/components/VotingModal.tsx`](client/src/components/VotingModal.tsx)
+- **Voting Engine & Live Tally**: [`server/src/socketHandlers.ts`](server/src/socketHandlers.ts) (`moderator:start_vote`, `player:cast_vote`) & [`client/src/components/VotingModal.tsx`](client/src/components/VotingModal.tsx)
 - **Two-Phone Pass-the-Phone**: [`client/src/components/SharedRoleReveal.tsx`](client/src/components/SharedRoleReveal.tsx) & [`SharedVotingModal.tsx`](client/src/components/SharedVotingModal.tsx)
-- **Play Again Reset**: [`server/src/roomManager.ts`](server/src/roomManager.ts) (`resetGameForPlayAgain`) & [`client/src/components/Popups.tsx`](client/src/components/Popups.tsx)
+- **Play Again Reset**: [`server/src/roomManager.ts`](server/src/roomManager.ts) (`playAgain`) & [`client/src/components/Popups.tsx`](client/src/components/Popups.tsx)

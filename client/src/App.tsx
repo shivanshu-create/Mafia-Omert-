@@ -11,7 +11,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <SocketProvider>
-        <div className="min-h-screen flex flex-col bg-stone-950 text-stone-100 selection:bg-red-900 selection:text-white">
+        <div className="min-h-screen flex flex-col bg-white text-black selection:bg-[#800000] selection:text-white font-sans">
           <Header />
           <main className="flex-1">
             <Routes>
@@ -23,7 +23,7 @@ export const App: React.FC = () => {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
-          <footer className="py-6 text-center text-xs text-stone-400 border-t border-stone-900">
+          <footer className="py-4 text-center text-[11px] text-stone-600 border-t-2 border-black bg-[#f0ede5] font-mono">
             <p>Mafia Omertà &bull; In-Person Game Companion</p>
           </footer>
         </div>

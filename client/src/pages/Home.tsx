@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../context/SocketContext';
 import { storage } from '../utils/storage';
-import { Users, Plus, ArrowRight, Shield, AlertCircle, RefreshCw, Smartphone, HelpCircle, BookOpen } from 'lucide-react';
+import { Users, Plus, ArrowRight, Shield, AlertCircle, RefreshCw, Smartphone, BookOpen } from 'lucide-react';
 import { HowToPlayModal } from '../components/HowToPlayModal';
 
 export const Home: React.FC = () => {
@@ -94,17 +94,11 @@ export const Home: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto px-4 py-6 sm:py-8 font-sans">
-      {/* Title & Tagline */}
+      {/* Title */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-white text-black border-2 border-black shadow-[2px_2px_0px_#000000] mb-3">
-          <span className="text-2xl">🎩</span>
-        </div>
         <h2 className="font-black text-2xl sm:text-3xl text-black tracking-wider uppercase">
           MAFIA OMERTÀ
         </h2>
-        <p className="text-stone-600 text-xs mt-1 uppercase tracking-wider font-bold">
-          The in-person party game system &bull; Portal Edition
-        </p>
       </div>
 
       {/* Kicked or Error Notification */}
@@ -169,10 +163,6 @@ export const Home: React.FC = () => {
           </div>
 
           <div className="p-4">
-            <p className="text-xs text-stone-700 mb-3 leading-relaxed">
-              Create a room, share the join code or QR code with your group, and manage live player roles and phases.
-            </p>
-
             {/* Mode Selector */}
             <div className="mb-4">
               <label className="block text-[11px] uppercase tracking-wider font-bold text-black mb-1.5">
@@ -216,18 +206,10 @@ export const Home: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between mt-2 px-0.5">
+              <div className="mt-2 px-0.5">
                 <span className="text-[11px] text-stone-600">
                   {selectedMode === 'multi_phone' ? 'Each player joins on their own phone' : 'Moderator phone + 1 shared player phone'}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => setIsHelpOpen(true)}
-                  className="text-[11px] font-bold text-[#800000] hover:underline inline-flex items-center gap-1 uppercase"
-                >
-                  <HelpCircle className="w-3 h-3" />
-                  <span>Mode Guide</span>
-                </button>
               </div>
             </div>
 

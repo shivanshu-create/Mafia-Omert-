@@ -1,4 +1,4 @@
-# Mafia Omertà 🎩🩸
+# Mafia Omertà 🩸
 
 **Mafia Omertà** is a sleek, web-based moderator companion and digital board for running the classic social-deduction party game **Mafia** in person. Styled like an atmospheric noir split-flap train-schedule departure board, it replaces physical cards and moderator memory slips with real-time status management, server-authoritative secret role delivery, live public voting, and seamless support for groups where either every player has their own phone (**Multi-Phone Mode**) or a single shared phone is passed around privately (**Two-Phone Mode**).
 

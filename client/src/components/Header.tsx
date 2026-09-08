@@ -12,25 +12,20 @@ export const Header: React.FC = () => {
     <>
       <header className="border-b-2 border-black bg-[#800000] text-white sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-2">
-          <Link to="/" className="flex items-center gap-2.5 group min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-black border-2 border-black flex items-center justify-center text-base sm:text-lg shrink-0 shadow-[1px_1px_0px_#000000]">
-              🎩
+          <Link to="/" className="flex flex-col justify-center group min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h1 className="font-sans font-black text-sm sm:text-base text-white tracking-wider uppercase truncate group-hover:text-amber-200 transition-colors">
+                MAFIA OMERTÀ
+              </h1>
+              {isModerator && (
+                <span className="text-[9px] sm:text-[10px] font-mono uppercase font-bold tracking-wider bg-black text-amber-300 border border-black px-1.5 py-0.5 shrink-0">
+                  MOD
+                </span>
+              )}
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <h1 className="font-sans font-black text-sm sm:text-base text-white tracking-wider uppercase truncate">
-                  MAFIA OMERTÀ
-                </h1>
-                {isModerator && (
-                  <span className="text-[9px] sm:text-[10px] font-mono uppercase font-bold tracking-wider bg-black text-amber-300 border border-black px-1.5 py-0.5 shrink-0">
-                    MOD
-                  </span>
-                )}
-              </div>
-              <p className="text-[9px] sm:text-[10px] text-stone-200 uppercase tracking-widest truncate">
-                The Code of Silence
-              </p>
-            </div>
+            <p className="text-[9px] sm:text-[10px] text-stone-200 uppercase tracking-widest truncate">
+              The Code of Silence
+            </p>
           </Link>
 
           <div className="flex items-center gap-2 shrink-0">

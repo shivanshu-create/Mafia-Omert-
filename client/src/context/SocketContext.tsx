@@ -31,7 +31,7 @@ interface SocketContextValue {
   activeVote: ActiveVoteState | null;
   sharedRoleRevealNotice: { playerId: string; playerName: string; role: Role | null } | null;
   createRoom: (gameMode?: GameMode) => Promise<{ success: boolean; roomCode?: string; error?: string }>;
-  validateRoom: (code: string) => Promise<{ valid: boolean; error?: string; gameMode?: GameMode }>;
+  validateRoom: (code: string) => Promise<{ valid: boolean; error?: string; gameMode?: GameMode; isConnectionError?: boolean }>;
   joinRoom: (code: string, name: string) => Promise<{ success: boolean; error?: string }>;
   joinSharedRoom: (code: string) => Promise<{ success: boolean; error?: string }>;
   addPlayerDirectly: (playerName: string) => Promise<{ success: boolean; player?: PublicPlayer; error?: string }>;
@@ -56,6 +56,7 @@ interface SocketContextValue {
   dismissSharedRoleReveal: () => void;
   attemptSilentReconnect: () => Promise<boolean>;
   reconnectWithToken: (roomCode: string, token: string) => Promise<boolean>;
+  waitForConnection: (timeoutMs?: number) => Promise<boolean>;
 }
 
 const SocketContext = createContext<SocketContextValue | null>(null);
@@ -101,7 +102,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       timeout: 20000,
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'],
     });
 
     socketRef.current = socketInstance;
@@ -110,6 +111,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     socketInstance.on('connect', () => {
       setIsConnected(true);
       silentReconnect(socketInstance);
+    });
+
+    socketInstance.on('connect_error', () => {
+      setIsConnected(false);
     });
 
     socketInstance.on('disconnect', () => {
@@ -313,69 +318,174 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     []
   );
 
-  const createRoom = useCallback(async (gameMode: GameMode = 'multi_phone') => {
-    if (!socketRef.current) return { success: false, error: 'Socket not connected' };
+  const waitForConnection = useCallback((timeoutMs: number = 12000): Promise<boolean> => {
+    if (socketRef.current?.connected) {
+      return Promise.resolve(true);
+    }
 
-    return new Promise<{ success: boolean; roomCode?: string; error?: string }>((resolve) => {
-      socketRef.current!.emit(
-        'room:create',
-        { gameMode },
-        (response: { success: boolean; roomCode?: string; moderatorToken?: string; error?: string }) => {
-          if (response.success && response.roomCode && response.moderatorToken) {
-            storage.clearAllSessions();
-            storage.saveModeratorSession(response.roomCode, response.moderatorToken);
-            setIsModerator(true);
-            setCurrentPlayer(null);
-            resolve({ success: true, roomCode: response.roomCode });
+    return new Promise((resolve) => {
+      let resolved = false;
+      let checkInterval: ReturnType<typeof setInterval> | null = null;
+      let timer: ReturnType<typeof setTimeout> | null = null;
+
+      const finish = (result: boolean) => {
+        if (!resolved) {
+          resolved = true;
+          if (timer) clearTimeout(timer);
+          if (checkInterval) clearInterval(checkInterval);
+          if (socketRef.current) {
+            socketRef.current.off('connect', onConnect);
+          }
+          resolve(result);
+        }
+      };
+
+      const onConnect = () => {
+        finish(true);
+      };
+
+      timer = setTimeout(() => {
+        finish(socketRef.current?.connected ?? false);
+      }, timeoutMs);
+
+      // Check every 50ms in case socketRef is being instantiated or connects
+      checkInterval = setInterval(() => {
+        if (socketRef.current) {
+          if (socketRef.current.connected) {
+            finish(true);
           } else {
-            resolve({ success: false, error: response.error || 'Failed to create room' });
+            // Trigger connect if not currently attempting
+            if (!socketRef.current.connected && !socketRef.current.active) {
+              socketRef.current.connect();
+            }
+            socketRef.current.off('connect', onConnect);
+            socketRef.current.once('connect', onConnect);
           }
         }
-      );
-    });
-  }, []);
+      }, 50);
 
-  const validateRoom = useCallback(async (code: string) => {
-    if (!socketRef.current) return { valid: false, error: 'Socket not connected' };
-
-    return new Promise<{ valid: boolean; error?: string }>((resolve) => {
-      socketRef.current!.emit(
-        'room:validate',
-        { roomCode: code },
-        (response: { valid: boolean; error?: string }) => {
-          resolve(response);
+      if (socketRef.current) {
+        if (socketRef.current.connected) {
+          finish(true);
+          return;
         }
-      );
+        socketRef.current.once('connect', onConnect);
+        if (!socketRef.current.connected && !socketRef.current.active) {
+          socketRef.current.connect();
+        }
+      }
     });
   }, []);
 
-  const joinRoom = useCallback(async (code: string, name: string) => {
-    if (!socketRef.current) return { success: false, error: 'Socket not connected' };
+  const createRoom = useCallback(
+    async (gameMode: GameMode = 'multi_phone') => {
+      const connected = await waitForConnection(12000);
+      if (!connected || !socketRef.current) {
+        return { success: false, error: 'Unable to connect to game server' };
+      }
 
-    return new Promise<{ success: boolean; error?: string }>((resolve) => {
-      socketRef.current!.emit(
-        'room:join',
-        { roomCode: code, playerName: name },
-        (response: { success: boolean; roomCode?: string; playerToken?: string; player?: PublicPlayer; error?: string }) => {
-          if (response.success && response.roomCode && response.playerToken && response.player) {
-            playerTokenRef.current = response.playerToken;
-            storage.clearAllSessions();
-            storage.savePlayerSession({
-              roomCode: response.roomCode,
-              playerToken: response.playerToken,
-              playerName: response.player.name,
-              playerId: response.player.id,
-            });
-            setIsModerator(false);
-            setCurrentPlayer(response.player);
-            resolve({ success: true });
-          } else {
-            resolve({ success: false, error: response.error || 'Failed to join room' });
+      return new Promise<{ success: boolean; roomCode?: string; error?: string }>((resolve) => {
+        const timer = setTimeout(() => {
+          resolve({ success: false, error: 'Server request timed out' });
+        }, 10000);
+
+        socketRef.current!.emit(
+          'room:create',
+          { gameMode },
+          (response: { success: boolean; roomCode?: string; moderatorToken?: string; error?: string }) => {
+            clearTimeout(timer);
+            if (response.success && response.roomCode && response.moderatorToken) {
+              storage.clearAllSessions();
+              storage.saveModeratorSession(response.roomCode, response.moderatorToken);
+              setIsModerator(true);
+              setCurrentPlayer(null);
+              resolve({ success: true, roomCode: response.roomCode });
+            } else {
+              resolve({ success: false, error: response.error || 'Failed to create room' });
+            }
           }
-        }
-      );
-    });
-  }, []);
+        );
+      });
+    },
+    [waitForConnection]
+  );
+
+  const validateRoom = useCallback(
+    async (code: string): Promise<{ valid: boolean; error?: string; gameMode?: GameMode; isConnectionError?: boolean }> => {
+      const normalizedCode = (code || '').trim().toUpperCase();
+      if (!normalizedCode) {
+        return { valid: false, error: 'Invalid room code' };
+      }
+
+      const connected = await waitForConnection(12000);
+      if (!connected || !socketRef.current) {
+        return {
+          valid: false,
+          error: 'Unable to connect to game server',
+          isConnectionError: true,
+        };
+      }
+
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          resolve({
+            valid: false,
+            error: 'Server verification timed out',
+            isConnectionError: true,
+          });
+        }, 10000);
+
+        socketRef.current!.emit(
+          'room:validate',
+          { roomCode: normalizedCode },
+          (response: { valid: boolean; error?: string; gameMode?: GameMode }) => {
+            clearTimeout(timer);
+            resolve(response);
+          }
+        );
+      });
+    },
+    [waitForConnection]
+  );
+
+  const joinRoom = useCallback(
+    async (code: string, name: string) => {
+      const connected = await waitForConnection(12000);
+      if (!connected || !socketRef.current) {
+        return { success: false, error: 'Unable to connect to game server' };
+      }
+
+      return new Promise<{ success: boolean; error?: string }>((resolve) => {
+        const timer = setTimeout(() => {
+          resolve({ success: false, error: 'Server request timed out' });
+        }, 10000);
+
+        socketRef.current!.emit(
+          'room:join',
+          { roomCode: code, playerName: name },
+          (response: { success: boolean; roomCode?: string; playerToken?: string; player?: PublicPlayer; error?: string }) => {
+            clearTimeout(timer);
+            if (response.success && response.roomCode && response.playerToken && response.player) {
+              playerTokenRef.current = response.playerToken;
+              storage.clearAllSessions();
+              storage.savePlayerSession({
+                roomCode: response.roomCode,
+                playerToken: response.playerToken,
+                playerName: response.player.name,
+                playerId: response.player.id,
+              });
+              setIsModerator(false);
+              setCurrentPlayer(response.player);
+              resolve({ success: true });
+            } else {
+              resolve({ success: false, error: response.error || 'Failed to join room' });
+            }
+          }
+        );
+      });
+    },
+    [waitForConnection]
+  );
 
   const startGame = useCallback(async () => {
     const modSession = storage.getModeratorSession();
@@ -562,28 +672,39 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [roomState]);
 
-  const joinSharedRoom = useCallback(async (code: string) => {
-    if (!socketRef.current) return { success: false, error: 'Socket not connected' };
+  const joinSharedRoom = useCallback(
+    async (code: string) => {
+      const connected = await waitForConnection(12000);
+      if (!connected || !socketRef.current) {
+        return { success: false, error: 'Unable to connect to game server' };
+      }
 
-    return new Promise<{ success: boolean; error?: string }>((resolve) => {
-      socketRef.current!.emit(
-        'room:join_shared',
-        { roomCode: code },
-        (response: { success: boolean; roomState?: PublicRoomState; error?: string }) => {
-          if (response.success && response.roomState) {
-            storage.clearAllSessions();
-            storage.saveSharedSession(code);
-            setIsModerator(false);
-            setCurrentPlayer(null);
-            setRoomState(response.roomState);
-            resolve({ success: true });
-          } else {
-            resolve({ success: false, error: response.error || 'Failed to connect as shared device' });
+      return new Promise<{ success: boolean; error?: string }>((resolve) => {
+        const timer = setTimeout(() => {
+          resolve({ success: false, error: 'Server request timed out' });
+        }, 10000);
+
+        socketRef.current!.emit(
+          'room:join_shared',
+          { roomCode: code },
+          (response: { success: boolean; roomState?: PublicRoomState; error?: string }) => {
+            clearTimeout(timer);
+            if (response.success && response.roomState) {
+              storage.clearAllSessions();
+              storage.saveSharedSession(code);
+              setIsModerator(false);
+              setCurrentPlayer(null);
+              setRoomState(response.roomState);
+              resolve({ success: true });
+            } else {
+              resolve({ success: false, error: response.error || 'Failed to connect as shared device' });
+            }
           }
-        }
-      );
-    });
-  }, []);
+        );
+      });
+    },
+    [waitForConnection]
+  );
 
   const addPlayerDirectly = useCallback(
     async (playerName: string) => {
@@ -743,6 +864,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         dismissSharedRoleReveal,
         attemptSilentReconnect,
         reconnectWithToken,
+        waitForConnection,
       }}
     >
       {children}

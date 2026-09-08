@@ -34,7 +34,7 @@ export const io = new Server<ClientToServerEvents, ServerToClientEvents>(server,
   },
   pingInterval: 10000,
   pingTimeout: 10000,
-  transports: ['websocket', 'polling'],
+  transports: ['polling', 'websocket'],
 });
 
 registerSocketHandlers(io, roomManager);

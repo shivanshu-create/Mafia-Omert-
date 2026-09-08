@@ -8,6 +8,7 @@ import { QRCodeModal } from '../components/QRCodeModal';
 import { VotingModal } from '../components/VotingModal';
 import { Popups } from '../components/Popups';
 import { HowToPlayModal } from '../components/HowToPlayModal';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 import { PlayerStatus, PublicPlayer, Role } from '../types';
 import {
   QrCode,
@@ -66,6 +67,17 @@ export const ModeratorLobby: React.FC = () => {
   const [selectedPlayerForStatus, setSelectedPlayerForStatus] = useState<PublicPlayer | null>(null);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
+  // Destructive Action Confirmation Dialog State
+  const [confirmDialog, setConfirmDialog] = useState<{
+    title: string;
+    message: React.ReactNode;
+    confirmLabel: string;
+    cancelLabel?: string;
+    confirmVariant?: 'danger' | 'warning' | 'primary';
+    onConfirm: () => Promise<void> | void;
+  } | null>(null);
+  const [isConfirmingAction, setIsConfirmingAction] = useState(false);
+
   const formattedCode = (code || '').trim().toUpperCase();
   const joinUrl = buildJoinUrl(formattedCode);
 
@@ -113,13 +125,29 @@ export const ModeratorLobby: React.FC = () => {
     }
   };
 
-  const handleAdvanceRound = async () => {
-    if (confirm(`Advance to Round ${(roomState?.round || 1) + 1}? Dead players will remain in history above.`)) {
-      const result = await advanceRound();
-      if (!result.success) {
-        alert(result.error || 'Failed to advance round');
-      }
-    }
+  const handleAdvanceRound = () => {
+    const nextRound = (roomState?.round || 1) + 1;
+    setConfirmDialog({
+      title: `Advance to Round ${nextRound}?`,
+      message: (
+        <div>
+          <p>Advance the game to Round {nextRound}?</p>
+          <p className="mt-1 text-stone-500">Eliminated casualties will be archived in the round history above.</p>
+        </div>
+      ),
+      confirmLabel: `Advance Round`,
+      cancelLabel: 'Cancel',
+      confirmVariant: 'warning',
+      onConfirm: async () => {
+        setIsConfirmingAction(true);
+        const result = await advanceRound();
+        setIsConfirmingAction(false);
+        setConfirmDialog(null);
+        if (!result.success) {
+          alert(result.error || 'Failed to advance round');
+        }
+      },
+    });
   };
 
   const handleStartVote = async () => {
@@ -169,27 +197,77 @@ export const ModeratorLobby: React.FC = () => {
     await setPlayerStatus(playerId, status);
   };
 
-  const handleKick = async (playerId: string) => {
-    const result = await kickPlayer(playerId);
-    if (!result.success) {
-      alert(result.error || 'Failed to kick player');
-    }
+  const handleKick = (playerId: string) => {
+    const player = (roomState?.players || []).find((p) => p.id === playerId);
+    const playerName = player?.name || 'this player';
+
+    setConfirmDialog({
+      title: `Remove ${playerName}?`,
+      message: (
+        <div>
+          <p>Are you sure you want to remove <strong className="text-black font-black">{playerName}</strong> from the room?</p>
+          <p className="mt-1 text-stone-500">They will be disconnected and removed from the lobby manifest.</p>
+        </div>
+      ),
+      confirmLabel: `Remove ${playerName}`,
+      cancelLabel: 'Cancel',
+      confirmVariant: 'danger',
+      onConfirm: async () => {
+        setIsConfirmingAction(true);
+        const result = await kickPlayer(playerId);
+        setIsConfirmingAction(false);
+        setConfirmDialog(null);
+        if (!result.success) {
+          alert(result.error || 'Failed to kick player');
+        }
+      },
+    });
   };
 
-  const handlePlayAgain = async () => {
-    if (confirm('Start a new game with the current players? Roles and round history will be reset.')) {
-      const result = await playAgain();
-      if (!result.success) {
-        alert(result.error || 'Failed to reset game');
-      }
-    }
+  const handlePlayAgain = () => {
+    setConfirmDialog({
+      title: 'Reset & Play Again?',
+      message: (
+        <div>
+          <p>Start a new game with the current players?</p>
+          <p className="mt-1 text-stone-500">Roles and round history will be reset, but all connected players will remain in the room.</p>
+        </div>
+      ),
+      confirmLabel: 'Reset Game',
+      cancelLabel: 'Cancel',
+      confirmVariant: 'primary',
+      onConfirm: async () => {
+        setIsConfirmingAction(true);
+        const result = await playAgain();
+        setIsConfirmingAction(false);
+        setConfirmDialog(null);
+        if (!result.success) {
+          alert(result.error || 'Failed to reset game');
+        }
+      },
+    });
   };
 
-  const handleLeaveRoom = async () => {
-    if (confirm('Are you sure you want to exit and close this game lobby?')) {
-      await leaveRoom();
-      navigate('/');
-    }
+  const handleLeaveRoom = () => {
+    setConfirmDialog({
+      title: 'Exit / End Room?',
+      message: (
+        <div>
+          <p>Are you sure you want to exit and close this game lobby?</p>
+          <p className="mt-1 text-stone-500">All connected players will be disconnected and this room session will end.</p>
+        </div>
+      ),
+      confirmLabel: 'Exit Room',
+      cancelLabel: 'Cancel',
+      confirmVariant: 'danger',
+      onConfirm: async () => {
+        setIsConfirmingAction(true);
+        await leaveRoom();
+        setIsConfirmingAction(false);
+        setConfirmDialog(null);
+        navigate('/');
+      },
+    });
   };
 
   if (isVerifying) {
@@ -556,6 +634,21 @@ export const ModeratorLobby: React.FC = () => {
         isOpen={showHelpModal}
         onClose={() => setShowHelpModal(false)}
         defaultTab="moderator"
+      />
+
+      {/* Confirmation Modal for Destructive Moderator Actions */}
+      <ConfirmationModal
+        isOpen={!!confirmDialog}
+        title={confirmDialog?.title || ''}
+        message={confirmDialog?.message}
+        confirmLabel={confirmDialog?.confirmLabel || 'Confirm'}
+        cancelLabel={confirmDialog?.cancelLabel || 'Cancel'}
+        confirmVariant={confirmDialog?.confirmVariant || 'danger'}
+        isConfirming={isConfirmingAction}
+        onConfirm={confirmDialog?.onConfirm || (() => {})}
+        onCancel={() => {
+          if (!isConfirmingAction) setConfirmDialog(null);
+        }}
       />
     </div>
   );

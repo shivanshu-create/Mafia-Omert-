@@ -7,6 +7,7 @@ import { VotingModal } from '../components/VotingModal';
 import { SharedVotingModal } from '../components/SharedVotingModal';
 import { SharedRoleReveal } from '../components/SharedRoleReveal';
 import { Popups } from '../components/Popups';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 import { LogOut, Clock, AlertTriangle, Loader2, Smartphone, UserPlus } from 'lucide-react';
 
 export const PlayerLobby: React.FC = () => {
@@ -86,11 +87,19 @@ export const PlayerLobby: React.FC = () => {
     }
   }, [kickedReason, navigate]);
 
-  const handleLeave = async () => {
-    if (confirm('Are you sure you want to leave this game room?')) {
-      await leaveRoom();
-      navigate('/');
-    }
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleLeave = () => {
+    setShowLeaveConfirm(true);
+  };
+
+  const handleConfirmLeave = async () => {
+    setIsLeaving(true);
+    await leaveRoom();
+    setIsLeaving(false);
+    setShowLeaveConfirm(false);
+    navigate('/');
   };
 
   const handleAddPlayer = async (e: React.FormEvent) => {
@@ -370,6 +379,25 @@ export const PlayerLobby: React.FC = () => {
           <span>{isTwoPhoneMode ? 'Disconnect Device' : 'Leave Room'}</span>
         </button>
       </div>
+
+      {/* Leave Room Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLeaveConfirm}
+        title={isTwoPhoneMode ? 'Disconnect Shared Phone?' : 'Leave Game Room?'}
+        message={
+          isTwoPhoneMode
+            ? 'Are you sure you want to disconnect this shared device from the lobby?'
+            : 'Are you sure you want to leave this game room? You will be disconnected from the lobby.'
+        }
+        confirmLabel={isTwoPhoneMode ? 'Disconnect' : 'Leave Room'}
+        cancelLabel="Cancel"
+        confirmVariant="danger"
+        isConfirming={isLeaving}
+        onConfirm={handleConfirmLeave}
+        onCancel={() => {
+          if (!isLeaving) setShowLeaveConfirm(false);
+        }}
+      />
     </div>
   );
 };

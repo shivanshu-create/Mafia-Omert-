@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSocket } from '../context/SocketContext';
 import { AlertTriangle, Vote, Users } from 'lucide-react';
+import { ConfirmationModal } from './ConfirmationModal';
 
 export const VotingModal: React.FC = () => {
   const {
@@ -10,6 +11,9 @@ export const VotingModal: React.FC = () => {
     isModerator,
     currentPlayer,
   } = useSocket();
+
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
 
   if (!activeVote || !activeVote.isOpen) return null;
 
@@ -35,10 +39,15 @@ export const VotingModal: React.FC = () => {
     await castVote(candidateId);
   };
 
-  const handleCancelVote = async () => {
-    if (confirm('Are you sure you want to cancel this day vote?')) {
-      await cancelVote();
-    }
+  const handleCancelVote = () => {
+    setShowCancelConfirm(true);
+  };
+
+  const handleConfirmCancelVote = async () => {
+    setIsCanceling(true);
+    await cancelVote();
+    setIsCanceling(false);
+    setShowCancelConfirm(false);
   };
 
   return (
@@ -235,6 +244,21 @@ export const VotingModal: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Cancel Day Vote Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showCancelConfirm}
+        title="Cancel Day Vote?"
+        message="Are you sure you want to cancel this day vote session? All cast votes for this round will be discarded."
+        confirmLabel="Cancel Vote"
+        cancelLabel="Keep Voting"
+        confirmVariant="danger"
+        isConfirming={isCanceling}
+        onConfirm={handleConfirmCancelVote}
+        onCancel={() => {
+          if (!isCanceling) setShowCancelConfirm(false);
+        }}
+      />
     </div>
   );
 };

@@ -42,6 +42,20 @@ export const TrainScheduleBoard: React.FC<TrainScheduleBoardProps> = ({
   const alivePlayers = players.filter((p) => p.isAlive !== false);
   const deadPlayers = players.filter((p) => p.isAlive === false);
 
+  // Sort players for display: each player's own card appears FIRST on their own device,
+  // followed by remaining players in their existing order. Moderator view remains unmodified.
+  const getDisplayPlayers = (sectionPlayers: PublicPlayer[]): PublicPlayer[] => {
+    if (isModerator || !currentPlayerId) {
+      return sectionPlayers;
+    }
+    const myPlayer = sectionPlayers.find((p) => p.id === currentPlayerId);
+    if (!myPlayer) {
+      return sectionPlayers;
+    }
+    const otherPlayers = sectionPlayers.filter((p) => p.id !== currentPlayerId);
+    return [myPlayer, ...otherPlayers];
+  };
+
   // If rounds array is provided, render multi-round sections; otherwise fallback to single section
   const sectionsToRender: PublicRoundSection[] =
     rounds.length > 0
@@ -115,6 +129,7 @@ export const TrainScheduleBoard: React.FC<TrainScheduleBoardProps> = ({
       <div className="divide-y-2 divide-black">
         {sectionsToRender.map((section) => {
           const isLatestRound = section.round === currentRound;
+          const displayPlayers = getDisplayPlayers(section.players);
 
           return (
             <div key={section.round} className="space-y-0">
@@ -165,13 +180,13 @@ export const TrainScheduleBoard: React.FC<TrainScheduleBoardProps> = ({
 
               {/* Cards for this Round Section */}
               <div className="p-3 sm:p-4 bg-white">
-                {section.players.length === 0 ? (
+                {displayPlayers.length === 0 ? (
                   <div className="py-8 text-center text-stone-500 font-mono text-xs">
                     No active players in this round.
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-                    {section.players.map((p) => (
+                    {displayPlayers.map((p) => (
                       <TrainScheduleCard
                         key={`${section.round}-${p.id}`}
                         player={p}

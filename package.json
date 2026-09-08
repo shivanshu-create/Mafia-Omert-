@@ -1,0 +1,14 @@
+{
+  "name": "mafia-omerta",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mafia Omertà - A moderator-driven in-person party game tool",
+  "scripts": {
+    "postinstall": "npm install --prefix server && npm install --prefix client",
+    "build": "npm run build --prefix client && npm run build --prefix server",
+    "start": "node server/dist/index.js",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "test": "npm run test --prefix server"
+  }
+}

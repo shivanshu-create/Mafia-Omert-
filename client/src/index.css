@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Cinzel', serif;
+  --font-sans: 'Arial', 'Helvetica', 'Verdana', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: #111111;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-noir {
+    font-family: var(--font-sans);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+  }
+
+  .font-code {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Retro early-2000s boxy portal modules & controls */
+.portal-module {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.portal-header {
+  background-color: #800000;
+  color: #ffffff;
+  padding: 4px 10px;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.retro-btn {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid #000000;
+  padding: 6px 12px;
+  transition: background-color 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.retro-btn-primary {
+  background-color: #800000;
+  color: #ffffff;
+}
+
+.retro-btn-primary:hover {
+  background-color: #660000;
+}
+
+.retro-btn-primary:active {
+  transform: translate(1px, 1px);
+}
+
+.retro-btn-secondary {
+  background-color: #f0ede5;
+  color: #111111;
+}
+
+.retro-btn-secondary:hover {
+  background-color: #e2ddd3;
+}
+
+.retro-btn-secondary:active {
+  transform: translate(1px, 1px);
+}
+
+/* Compatibility fallbacks for existing classes */
+.bg-noir-card {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.bg-noir-card-highlight {
+  background-color: #ffffff;
+  border: 2px solid #800000;
+  box-shadow: 2px 2px 0px #800000;
+}
+
+.glow-crimson {
+  box-shadow: 2px 2px 0px #800000;
+}
+
+.glow-gold {
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Classic boxy scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0ede5;
+  border-left: 1px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0bab0;
+  border: 1px solid #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9a948a;
+}
